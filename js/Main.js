@@ -10,26 +10,63 @@ import {
   StyleSheet,
   Text,
   View,
+    Image,
 } from 'react-native';
-
-export default class Main extends Component {
+import TabNavigator from 'react-native-tab-navigator';
+var CustomBadgeView=require('./component/CustomBadgeView');
+ export  default class Main extends Component {
+   constructor(props) {
+     super(props);
+     this.state = {
+         selectedTab:'home',
+     };
+   }
   render() {
     return (
-      <View style={styles.container}>
-        <Text>hello github</Text>
-        {/*<Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>*/}
-      </View>
+        <TabNavigator>
+          <TabNavigator.Item
+              selected={this.state.selectedTab === 'home'}
+              title="Home"
+              renderIcon={() => <Image style={{width:30,height:20}} source={require('../res/images/ic_polular.png') }/>}
+              renderSelectedIcon={() => <Image style={{width:30,height:20}} source={require('../res/images/ic_polular.png')} />}
+              badgeText="1"
+              onPress={() => this.setState({ selectedTab: 'home' })}>
+              <View style={{backgroundColor:'red'}}></View>
+          </TabNavigator.Item>
+          <TabNavigator.Item
+              selected={this.state.selectedTab === 'profile'}
+              title="Profile"
+              renderIcon={() => <Image style={{width:30,height:20}} source={require('../res/images/ic_trending.png')} />}
+              renderSelectedIcon={() => <Image style={{width:30,height:20}} source={require('../res/images/ic_trending.png')} />}
+              renderBadge={() => this.getView()}
+              onPress={() => this.setState({ selectedTab: 'profile' })}>
+            <View style={{backgroundColor:'green'}}></View>
+          </TabNavigator.Item>
+            <TabNavigator.Item
+                selected={this.state.selectedTab === 'love'}
+                title="Home"
+                renderIcon={() => <Image style={{width:30,height:20}} source={require('../res/images/ic_favorite.png') }/>}
+                renderSelectedIcon={() => <Image style={{width:30,height:20,}} source={require('../res/images/ic_favorite.png')} />}
+                badgeText="1"
+                onPress={() => this.setState({ selectedTab: 'love' })}>
+                <View style={{backgroundColor:'gray'}}></View>
+            </TabNavigator.Item>
+            <TabNavigator.Item
+                selected={this.state.selectedTab === 'me'}
+                title="Profile"
+                renderIcon={() => <Image style={styles.image} source={require('../res/images/ic_my.png')} />}
+                renderSelectedIcon={() => <Image style={{width:30,height:20}} source={require('../res/images/ic_my.png')} />}
+                renderBadge={() => this.getView()}
+                onPress={() => this.setState({ selectedTab: 'me' })}>
+                <View style={{backgroundColor:'white'}}></View>
+            </TabNavigator.Item>
+        </TabNavigator>
     );
+
   }
+     getView(){
+         return <Text style={{color:'red',fontSize:14,borderRadius:7,backgroundColor:'yellow'}}>e</Text>
+     }
 }
 
 const styles = StyleSheet.create({
@@ -49,5 +86,10 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-});
-module.exports=Main;
+    image:{
+        width:20,
+        height:20,
+    }
+})
+
+module.exports=Main

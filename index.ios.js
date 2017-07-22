@@ -15,9 +15,7 @@ var Main=require("./js/Main")
 export default class GHClient extends Component {
     render() {
         return (
-            <View style={styles.container}>
-              <Main/>
-            </View>
+            <Main/>
         );
     }
 }
