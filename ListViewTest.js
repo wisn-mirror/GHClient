@@ -32,7 +32,7 @@ export default class ListViewTest extends Component {
         return (
             <View style={{flex: 1, flexDirection: 'column', alignItems: 'center', backgroundColor: 'white'}}>
                 <NavigatorBar
-                    title={'Wisn'}
+                    title={'ListViewTest'}
                     style={{backgroundColor: 'yellow'}}
                     statusBar={{
                         barStyle: 'light-content',
@@ -90,8 +90,8 @@ export default class ListViewTest extends Component {
     }
 
     RefreshData() {
-        // Alert.alert("refresh",'REFRESH');
-        setTimeout(() => {
+        setTimeout(()=>{
+            Alert.alert("refresh",'REFRESH');
             this.setState({
                 isLoading:false,
             })

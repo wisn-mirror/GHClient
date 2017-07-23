@@ -15,11 +15,13 @@ import {
 
 var Main = require("./js/Main")
 var Gift = require('./gift.js');
-
+var ListViewTest=require('./ListViewTest')
+var FetchTest=require('./FetchTest')
+var FetchUtilsTest=require('./FetchUtilsTest')
 export default class GHClient extends Component {
     render() {
         return (
-            <Gift/>
+            <FetchUtilsTest/>
         );
     }
 }
