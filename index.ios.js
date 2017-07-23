@@ -14,11 +14,11 @@ import {
 } from 'react-native';
 var Main=require("./js/Main")
 var Gift = require('./gift');
-
+var ListViewTest=require('./ListViewTest')
 export default class GHClient extends Component {
     render() {
         return (
-            <Gift/>
+            <ListViewTest/>
         );
     }
 }
