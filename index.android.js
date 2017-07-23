@@ -18,11 +18,12 @@ var Gift = require('./gift.js');
 var ListViewTest=require('./ListViewTest')
 var FetchTest=require('./FetchTest')
 var FetchUtilsTest=require('./FetchUtilsTest')
+import setup from './js/pages/Setup'
 export default class GHClient extends Component {
     render() {
         return (
-            <FetchUtilsTest/>
+            <setup/>
         );
     }
 }
-AppRegistry.registerComponent('GHClient', () => GHClient);
+AppRegistry.registerComponent('GHClient', () => setup);
