@@ -1,0 +1,66 @@
+import React, {
+    Component
+} from 'react';
+import {
+    View,
+    Text,
+    Image,
+    StyleSheet,
+} from 'react-native';
+
+export default class PopularItem extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    render() {
+        return (
+            <View style={styles.item_container}>
+                <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.full_name}</Text>
+                <Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.description}</Text>
+                <View
+                    style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 5}}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        {/*<Text>{this.props.rowData.html_url}</Text>*/}
+                        <Text style={{color:'gray',fontSize:12}}>Author:</Text>
+                        <Image style={{width: 18, height: 18, marginLeft: 5,borderRadius:1}}
+                               source={{uri: this.props.rowData.owner.avatar_url}}
+                        />
+                    </View>
+
+                    {/*Text>{this.props.rowData.owner.login}</Text>*/}
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text  style={{color:'gray',fontSize:12}}>Starts:</Text>
+                        <Text  style={{color:'gray',fontSize:12}}>{this.props.rowData.stargazers_count}</Text>
+                    </View>
+                    <Image style={{width: 18, height: 18, tintColor: "#5b7ee5"}}
+                           source={require('../../res/images/ic_star.png')}/>
+                </View>
+
+            </View>
+        );
+    }
+}
+const styles = StyleSheet.create({
+    item_container: {
+        marginTop: 10,
+        marginLeft: 5,
+        marginRight: 5,
+        padding: 8,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        borderWidth: 0.5,
+        borderColor:'#dedede',
+        borderRadius: 1,
+        shadowColor:'gray',
+        shadowOffset:{width:3,height:3},
+        shadowOpacity:0.4,
+        shadowRadius:1,
+        elevation:2,
+
+
+    }
+})
+
+module.exports = PopularItem;
