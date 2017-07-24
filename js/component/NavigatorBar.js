@@ -26,6 +26,7 @@ export default class NavigatorBar extends Component {
         style: View.propTypes.style,
         title: PropTypes.string,
         titleStyle: View.propTypes.style,
+        statusBarOutViewStyle: View.propTypes.style,
         titleView: PropTypes.element,
         hide: PropTypes.boolean,
         leftButton: PropTypes.element,
@@ -48,9 +49,9 @@ export default class NavigatorBar extends Component {
 
     render() {
         let statusbar = <View
-            style={[styles.statusBarStyle, this.props.statusBar]}><StatusBar {...this.props.statusBar}/></View>
+            style={[styles.statusBarStyle, this.props.statusBarOutViewStyle]}><StatusBar {...this.props.statusBar}/></View>
         let TitleView = this.props.titleView ? this.props.titleView :
-            <Text style={[styles.titleStyle,this.props.titleColor]}>{this.props.title}</Text>
+            <Text style={[styles.titleStyle,this.props.titleStyle]}>{this.props.title}</Text>
         let content = <View style={styles.nabar}>
             <TouchableOpacity onPress={() => {
                 if (this.props.leftButtonOnPress !== null) {

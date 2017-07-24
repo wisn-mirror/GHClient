@@ -23,9 +23,9 @@ export default class ListViewTest extends Component {
             word: '',
             count: 0,
             dataSource: ds.cloneWithRows(data.result),
-            isLoading: true,
+            isLoading: false,
         };
-        this.RefreshData();
+        // this.RefreshData();
     }
 
     render() {
@@ -39,6 +39,7 @@ export default class ListViewTest extends Component {
                         hidden: false,
                         backgroundColor: 'green'
                     }}
+                    statusBarOutViewStyle={{backgroundColor:'green'}}
                     leftButton={
                         <Image style={{width: 22, height: 22, margin: 5}}
                                source={require('./res/images/ic_arrow_back_white_36pt.png')}/>
@@ -94,7 +95,7 @@ export default class ListViewTest extends Component {
             Alert.alert("refresh",'REFRESH');
             this.setState({
                 isLoading:false,
-            })
+            });
         }, 3000);
     }
 

@@ -8,16 +8,18 @@ import {
 
 import NavigatorBar from "../component/NavigatorBar";
 import HomePage from './HomePage'
+import Popular from './Popular'
 export  default class WelcomePage extends  Component{
     componentDidMount() {
        this.timer= setTimeout(()=>{
             this.props.navigator.resetTo(
                 {
+                    // component:Popular,
                     component:HomePage,
                 }
             )
 
-        },2000);
+        },20);
     }
 
     componentWillUnmount() {

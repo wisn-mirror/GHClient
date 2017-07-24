@@ -11,43 +11,59 @@ import {
     Text,
     View,
     Image,
+    Navigator,
 } from 'react-native';
 import TabNavigator from 'react-native-tab-navigator';
 
 var CustomBadgeView = require('../component/CustomBadgeView');
+// var Popular = require('./Popular');
+// var Love = require('./Love');
+// var Profile = require('./Profile');
+// var Me = require('./Me');
+import Popular from './Popular';
+import Profile from './Profile';
+import Love from './Love';
+import Me from './Me';
+
 export default class HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTab: 'home',
+            selectedTab: 'popular',
         };
     }
 
     render() {
         return (
             <TabNavigator>
-                {this.getTabNavigator('home', 'Home', require('../../res/images/ic_polular.png'))}
-                {this.getTabNavigator('profile', 'Profile', require('../../res/images/ic_trending.png'))}
-                {this.getTabNavigator('love', 'Love', require('../../res/images/ic_favorite.png'))}
-                {this.getTabNavigator('me', 'Me', require('../../res/images/ic_my.png'))}
+                {this.getTabNavigator('popular', 'Popular', require('../../res/images/ic_polular.png'), Popular)}
+                {this.getTabNavigator('profile', 'Profile', require('../../res/images/ic_trending.png'), Profile)}
+                {this.getTabNavigator('love', 'Love', require('../../res/images/ic_favorite.png'), Love)}
+                {this.getTabNavigator('me', 'Me', require('../../res/images/ic_my.png'), Me)}
             </TabNavigator>
         );
     }
-    getTabNavigator(selectedTab1, Title, iconRes) {
+
+    getTabNavigator(selectedTab1, Title, iconRes, Component) {
         return (
             <TabNavigator.Item
                 selected={this.state.selectedTab === selectedTab1}
                 title={Title}
-                selectedTitleStyle={{color:'red'}}
+                selectedTitleStyle={{color: '#5b7ee5'}}
                 renderIcon={() => <Image style={styles.image} source={iconRes}/>}
-                renderSelectedIcon={() => <Image style={[styles.image,{tintColor:'red'}]} source={iconRes}/>}
+                renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#5b7ee5'}]} source={iconRes}/>}
                 renderBadge={() => this.getView()}
-                onPress={() => this.setState({selectedTab: selectedTab1})}>
-                <View><Text>ddd</Text></View>
+                onPress={() => this.setState({selectedTab: selectedTab1})}
+            >
+                <Component {...this.props}/>
             </TabNavigator.Item>
         );
     }
-
+    getContentView(contentView){
+        this.props.navigator.push({
+            component:contentView,
+        })
+    }
     getView() {
         return <Text style={{color: 'red', fontSize: 14, borderRadius: 7, backgroundColor: 'yellow'}}>e</Text>
     }
