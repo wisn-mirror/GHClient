@@ -52,6 +52,7 @@ export default class Popular extends Component {
                 style={{backgroundColor: '#5b7ee5'}}
                 statusBarOutViewStyle={{backgroundColor: '#4862b4'}}
                 titleStyle={{color: 'white'}}
+                statusBar={{backgroundColor:'#4862b4',barStyle:'light-content'}}
             />
             <ScrollViewTabView
                 tabBarBackgroundColor='#5b7ee5'
@@ -60,10 +61,12 @@ export default class Popular extends Component {
                 tabBarUnderlineStyle={{backgroundColor:'white'}}
                 renderTabBar={()=><ScrollableTabBar/>}
             >
+                <PopularBar tabLabel="Golang">Golang</PopularBar>
+                <PopularBar tabLabel="Android">Android</PopularBar>
                 <PopularBar tabLabel="Java">Java</PopularBar>
                 <PopularBar tabLabel="Ios">Ios</PopularBar>
-                <PopularBar tabLabel="Android">Android</PopularBar>
                 <PopularBar tabLabel="JavaScript">JavaScript</PopularBar>
+                <PopularBar tabLabel="Python">Python</PopularBar>
             </ScrollViewTabView>
         </View>);
     }
