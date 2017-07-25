@@ -54,7 +54,7 @@ export default class NavigatorBar extends Component {
             <Text style={[styles.titleStyle, this.props.titleStyle]}>{this.props.title}</Text>
         let content = <View style={styles.nabar}>
             <TouchableOpacity onPress={() => {
-                if (this.props.leftButtonOnPress !== null) {
+                if (this.props.leftButtonOnPress ) {
                     this.props.leftButtonOnPress();
                 }
             }

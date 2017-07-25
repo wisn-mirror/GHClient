@@ -8,30 +8,35 @@ import {
 } from 'react-native';
 
 import NavigatorBar from "../component/NavigatorBar";
-
+import CustomKeyPage from './me/CustomKeyPage';
 export default class Me extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            result: '',
-        };
     }
 
     render() {
-        return(<View>
+        return (<View>
             <NavigatorBar
-                title="最热"
+                title="我的"
+                titleStyle={{color:'white'}}
+                style={{backgroundColor: '#5b7ee5'}}
+                statusBarOutViewStyle={{backgroundColor: '#4862b4'}}
             />
-            <Text>获取数据</Text>
-            <Text>result:{this.state.result}</Text>
+            <Text onPress={() => {
+                this.props.navigator.push({
+                   component:CustomKeyPage,
+                    params:{...this.props},
+                })
+            }}>customkeypage</Text>
+
         </View>)
     }
 }
 
-const styles= StyleSheet.create({
-    container:{
-        flex:1,
-        flexDirection:'column',
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
     }
 });
 module.exports = Me;
