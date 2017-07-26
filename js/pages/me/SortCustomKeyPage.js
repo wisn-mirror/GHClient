@@ -14,6 +14,7 @@ import {
 import NavigatorBar from "../../component/NavigatorBar";
 import LanguageDao, {FLAG_LAGUAGE} from '../../expand/dao/LanguageDao';
 import SortableListView from 'react-native-sortable-listview'
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 var Dimensions = require('Dimensions');
 var Swidth = Dimensions.get('window').width;
@@ -21,9 +22,11 @@ export default class SortCustomKeyPage extends Component {
     constructor(props) {
         super(props);
         this.LanguageDao = new LanguageDao(FLAG_LAGUAGE.flag_language);
-        this.changeData = [];
+        this.OldArray=[];
+        this.ResultArray=[];
+        this.ChangeBeforData = [];
         this.state = {
-            ArrayData: [],
+            ChangeArrayData: [],
         };
     }
 
@@ -33,24 +36,26 @@ export default class SortCustomKeyPage extends Component {
                 this.filterKey(result1);
             }).catch(error => {
             this.setState({
-                ArrayData: error,
+                ChangeArrayData: error,
             });
         })
     }
 
     filterKey(result) {
+        this.OldArray=this.copyArray(result);
+        this.ResultArray=this.copyArray(this.OldArray);
         var temp = [];
         for (var i = 0, len = result.length; i < len; i++) {
             var item = result[i];
             if (item.checked) {
                 temp.push(item);
-                this.changeData.push(item);
+                this.ChangeBeforData.push(item);
             }
         }
         this.setState({
-            ArrayData: temp,
+            ChangeArrayData: temp,
         });
-        console.log("length" + this.state.ArrayData.length)
+        // console.log("length" + this.state.ChangeArrayData.length)
     }
 
     render() {
@@ -69,42 +74,41 @@ export default class SortCustomKeyPage extends Component {
                 }
                 leftButtonOnPress={() => this.leftButtonOnPress()}
                 rightButtonOnPress={() => this.RightButtonOnPress()}
-
             />
             <SortableListView
                 style={{flex: 1}}
-                data={this.state.ArrayData}
-                order={Object.keys(this.state.ArrayData)}
+                data={this.state.ChangeArrayData}
+                order={Object.keys(this.state.ChangeArrayData)}
                 onRowMoved={e => {
-                    this.state.ArrayData.splice(e.to, 0, this.state.ArrayData.splice(e.from, 1)[0])
+                    this.state.ChangeArrayData.splice(e.to, 0, this.state.ChangeArrayData.splice(e.from, 1)[0])
                     this.forceUpdate()
                 }}
                 renderRow={row => <SortItem data={row}/>}
             />
+            <Toast  ref={toast=>this.toast=toast}/>
         </View>)
     }
 
 
     RightButtonOnPress() {
-        console.log("save:" + this.changeData.length);
-        if (this.changeData.length === 0) {
-            this.props.navigator.pop();
-        } else {
-            this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
+        if(!this.isEquals(this.ChangeBeforData,this.state.ChangeArrayData)){
+            this.saveData();
+            this.toast.show('保存成功',DURATION.LENGTH_SHORT);
+            this.ChangeBeforData=this.copyArray(this.state.ChangeArrayData);
+        }else{
+            this.toast.show("未修改任何数据",DURATION.LENGTH_SHORT);
         }
     }
 
     leftButtonOnPress() {
-        if (this.changeData.length === 0) {
-            this.props.navigator.pop();
-        } else {
+        if(!this.isEquals(this.ChangeBeforData,this.state.ChangeArrayData)){
             Alert.alert(
                 '保存标签',
                 '退出需要保存标签吗？',
                 [
                     {
                         text: '保存退出', onPress: () => {
-                        this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
+                        this.saveData();
                         this.props.navigator.pop();
                     }
                     },
@@ -116,9 +120,45 @@ export default class SortCustomKeyPage extends Component {
                 ],
                 {cancelable: false}
             )
-
-
+        }else{
+            this.props.navigator.pop();
         }
+    }
+    saveData(){
+        for(var i=0,len=this.ChangeBeforData.length; i<len; i++){
+            var item=this.ChangeBeforData[i];
+            var index=this.OldArray.indexOf(item);
+            this.ResultArray.splice(index,1,this.state.ChangeArrayData[i])
+        }
+        this.LanguageDao.save(FLAG_LAGUAGE.flag_language,this.ResultArray );
+
+    }
+    /**
+     * 比较两个集合是否相等
+     * @param data1
+     * @param data2
+     * @returns {boolean}
+     */
+    isEquals(data1,data2){
+        if(data1.length!==data2.length||data1===null||data2===null){
+            return false ;
+        }
+        for(var i=0,len=data1.length;i<len;i++){
+            if(data1[i]!==data2[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+    copyArray(data1){
+        if(data1===null){
+            return [];
+        }
+        var data2=[];
+        for(var i=0,len=data1.length;i<len;i++){
+            data2.push(data1[i]);
+        }
+        return data2;
     }
 }
 
@@ -148,11 +188,4 @@ class SortItem extends Component {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-    },
-
-});
 module.exports = SortCustomKeyPage;

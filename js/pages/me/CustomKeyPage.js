@@ -12,6 +12,7 @@ import {
 
 import NavigatorBar from "../../component/NavigatorBar";
 import LanguageDao  ,{FLAG_LAGUAGE} from '../../expand/dao/LanguageDao';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 import CheckBox from 'react-native-check-box';
 import WCheckBox from '../../component/WCheckBox';
@@ -22,7 +23,7 @@ export default class CustomKeyPage extends Component {
     constructor(props) {
         super(props);
         this.LanguageDao = new LanguageDao(FLAG_LAGUAGE.flag_language);
-        this.changeData=[];
+        this.ChangeBeforData=[];
         this.state = {
             data: [],
         };
@@ -62,6 +63,7 @@ export default class CustomKeyPage extends Component {
             <ScrollView style={{backgroundColor:'white',}}>
                 {this.renderRowView()}
             </ScrollView>
+            <Toast  ref={toast=>this.toast=toast}/>
         </View>)
     }
 
@@ -112,17 +114,17 @@ export default class CustomKeyPage extends Component {
     }
 
     RightButtonOnPress() {
-        console.log("save:"+this.changeData.length);
-        if(this.changeData.length===0){
-            this.props.navigator.pop();
-        }else{
+        if(this.ChangeBeforData.length!==0){
             this.LanguageDao.save(FLAG_LAGUAGE.flag_language,this.state.data);
-
+            this.toast.show('保存成功',DURATION.LENGTH_SHORT);
+            this.ChangeBeforData.length=0;
+        }else{
+            this.toast.show("未修改任何数据",DURATION.LENGTH_SHORT);
         }
     }
 
     leftButtonOnPress() {
-        if(this.changeData.length===0){
+        if(this.ChangeBeforData.length===0){
             this.props.navigator.pop();
         }else{
             Alert.alert(
@@ -146,16 +148,16 @@ export default class CustomKeyPage extends Component {
 
     checkBoxOnClick(item,isCheck) {
         item.checked=isCheck;
-        for(var i=0,len=this.changeData.length;i<len;i++){
-            var temp=this.changeData[i];
+        for(var i=0,len=this.ChangeBeforData.length; i<len; i++){
+            var temp=this.ChangeBeforData[i];
             if(temp===item){
                 //移除数组中的元素
-                this.changeData.splice(i,1);
+                this.ChangeBeforData.splice(i,1);
                 return ;
             }
         }
-        this.changeData.push(item);
-        console.log("FINAL:"+item.name + isCheck);
+        this.ChangeBeforData.push(item);
+        // console.log("FINAL:"+item.name + isCheck);
         // Alert.alert('回调',
         //     isCheck);
 
