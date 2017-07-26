@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import NavigatorBar from "../../component/NavigatorBar";
-import LanguageDao  ,{FLAG_LAGUAGE} from '../../expand/dao/LanguageDao';
+import LanguageDao, {FLAG_LAGUAGE} from '../../expand/dao/LanguageDao';
 import Toast, {DURATION} from 'react-native-easy-toast';
 
 import CheckBox from 'react-native-check-box';
@@ -22,8 +22,11 @@ var Swidth = Dimensions.get('window').width;
 export default class CustomKeyPage extends Component {
     constructor(props) {
         super(props);
+        this.isRemoveKey=this.props.isRemoveKeyValue;
+        console.log("dddddddd:"+this.props.isRemoveKeyValue);
         this.LanguageDao = new LanguageDao(FLAG_LAGUAGE.flag_language);
-        this.ChangeBeforData=[];
+        this.ChangeBeforData = [];
+        this.RemoveArray = [];
         this.state = {
             data: [],
         };
@@ -43,9 +46,11 @@ export default class CustomKeyPage extends Component {
     }
 
     render() {
-        return (<View style={{flexDirection:'column',flex:1}}>
+        let titleName = this.isRemoveKey ? '标签移除' : '自定义标签';
+        let rightTitle = this.isRemoveKey ? '移除':'保存';
+        return (<View style={{flexDirection: 'column', flex: 1}}>
             <NavigatorBar
-                title="标签"
+                title={titleName}
                 titleStyle={{color: 'white'}}
                 style={{backgroundColor: '#5b7ee5'}}
                 statusBarOutViewStyle={{backgroundColor: '#4862b4'}}
@@ -54,36 +59,36 @@ export default class CustomKeyPage extends Component {
                            source={require('../../../res/images/ic_arrow_back_white_36pt.png')}/>
                 }
                 rightButton={
-                    <Text style={{color: 'white', marginRight: 5, fontSize: 16}}>保存</Text>
+                    <Text style={{color: 'white', marginRight: 5, fontSize: 16}}>{rightTitle}</Text>
                 }
                 leftButtonOnPress={() => this.leftButtonOnPress()}
                 rightButtonOnPress={() => this.RightButtonOnPress()}
 
             />
-            <ScrollView style={{backgroundColor:'white',}}>
+            <ScrollView style={{backgroundColor: 'white',}}>
                 {this.renderRowView()}
             </ScrollView>
-            <Toast  ref={toast=>this.toast=toast}/>
+            <Toast ref={toast => this.toast = toast}/>
         </View>)
     }
 
     renderRowView() {
         var views = [];
         if (this.state.data !== null && this.state.data !== null && this.state.data.length !== 0) {
-            var alldata =this.state.data;
+            var alldata = this.state.data;
             if ((alldata.length % 2) === 1) {
-                for (var i = 0 ,len=alldata.length-1; i < len; i = i + 2) {
+                for (var i = 0, len = alldata.length - 1; i < len; i = i + 2) {
                     views.push(<View key={i} style={styles.keyItemStyle}>
                         {this.renderCheckBox(alldata[i])}
                         {this.renderCheckBox(alldata[i + 1])}
                     </View>)
                 }
-                var object=alldata[alldata.length - 1];
+                var object = alldata[alldata.length - 1];
                 views.push(<View key={alldata.length + 2} style={styles.keyItemStyleSingle}>
                     {this.renderCheckBox(object)}
                 </View>);
-            }else{
-                for (var i = 0,len=alldata.length; i < len; i = i + 2) {
+            } else {
+                for (var i = 0, len = alldata.length; i < len; i = i + 2) {
                     views.push(<View key={i} style={styles.keyItemStyle}>
                         {this.renderCheckBox(alldata[i])}
                         {this.renderCheckBox(alldata[i + 1])}
@@ -97,16 +102,16 @@ export default class CustomKeyPage extends Component {
     renderCheckBox(item) {
         return (
             <WCheckBox
-                style={{flexDirection:'row',backgroundColor:'white',flex:1,marginRight:10,marginLeft:10}}
-                onClick={(isCheck) => this.checkBoxOnClick(item,isCheck)}
-                isChecked={item.checked}
+                style={{flexDirection: 'row', backgroundColor: 'white', flex: 1, marginRight: 10, marginLeft: 10}}
+                onClick={(isCheck) => this.checkBoxOnClick(item, isCheck)}
+                isChecked={this.isRemoveKey ? false : item.checked}
                 leftText={item.name}
                 checkedImage={<Image
-                    style={{tintColor:'#5b7ee5'}}
+                    style={{tintColor: '#5b7ee5'}}
                     source={require('../../../res/images/ic_check_box.png')}
                 />}
                 unCheckedImage={<Image
-                    style={{tintColor:'#5b7ee5'}}
+                    style={{tintColor: '#5b7ee5'}}
                     source={require('../../../res/images/ic_check_box_outline_blank.png')}
                 />}
             />
@@ -114,49 +119,104 @@ export default class CustomKeyPage extends Component {
     }
 
     RightButtonOnPress() {
-        if(this.ChangeBeforData.length!==0){
-            this.LanguageDao.save(FLAG_LAGUAGE.flag_language,this.state.data);
-            this.toast.show('保存成功',DURATION.LENGTH_SHORT);
-            this.ChangeBeforData.length=0;
-        }else{
-            this.toast.show("未修改任何数据",DURATION.LENGTH_SHORT);
+        if (this.isRemoveKey) {
+            if (this.RemoveArray.length === 0) {
+                this.toast.show("未选中任何数据", DURATION.LENGTH_SHORT);
+            } else {
+                this.removeData();
+            }
+        } else {
+            if (this.ChangeBeforData.length !== 0) {
+                this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
+                this.toast.show('保存成功', DURATION.LENGTH_SHORT);
+                this.ChangeBeforData.length = 0;
+            } else {
+                this.toast.show("未修改任何数据", DURATION.LENGTH_SHORT);
+            }
         }
+    }
+
+    removeData() {
+        for (var i = 0, len = this.RemoveArray.length; i < len; i++) {
+            var item = this.RemoveArray[i];
+            var index = this.state.data.indexOf(item);
+            this.state.data.splice(index, 1, item);
+        }
+        this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
+        this.toast.show("移除成功", DURATION.LENGTH_SHORT);
     }
 
     leftButtonOnPress() {
-        if(this.ChangeBeforData.length===0){
-            this.props.navigator.pop();
-        }else{
-            Alert.alert(
-                '保存标签',
-                '退出需要保存标签吗？',
-                [
-                    {text: '保存退出', onPress: () =>{
-                        this.LanguageDao.save(FLAG_LAGUAGE.flag_language,this.state.data);
-                        this.props.navigator.pop();
-                    }},
-                    {text: '不保存退出', onPress: () => {
-                        this.props.navigator.pop();
-                    }, style: 'cancel'},
-                ],
-                { cancelable: false }
-            )
 
-
+        if (this.isRemoveKey) {
+            if (this.RemoveArray.length > 0) {
+                Alert.alert(
+                    '移除标签',
+                    '退出需要移除标签吗？',
+                    [
+                        {
+                            text: '移除并退出', onPress: () => {
+                            this.removeData();
+                            this.props.navigator.pop();
+                        }
+                        },
+                        {
+                            text: '不移除并退出', onPress: () => {
+                            this.props.navigator.pop();
+                        }, style: 'cancel'
+                        },
+                    ],
+                    {cancelable: false}
+                )
+            } else {
+                this.props.navigator.pop();
+            }
+        } else {
+            if (this.ChangeBeforData.length === 0) {
+                this.props.navigator.pop();
+            } else {
+                Alert.alert(
+                    '保存标签',
+                    '退出需要保存标签吗？',
+                    [
+                        {
+                            text: '保存退出', onPress: () => {
+                            this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
+                            this.props.navigator.pop();
+                        }
+                        },
+                        {
+                            text: '不保存退出', onPress: () => {
+                            this.props.navigator.pop();
+                        }, style: 'cancel'
+                        },
+                    ],
+                    {cancelable: false}
+                )
+            }
         }
     }
 
-    checkBoxOnClick(item,isCheck) {
-        item.checked=isCheck;
-        for(var i=0,len=this.ChangeBeforData.length; i<len; i++){
-            var temp=this.ChangeBeforData[i];
-            if(temp===item){
-                //移除数组中的元素
-                this.ChangeBeforData.splice(i,1);
-                return ;
+    checkBoxOnClick(item, isCheck) {
+        if (this.isRemoveKey) {
+            if (isCheck) {
+                this.RemoveArray.push(item);
+            } else {
+                var index = this.RemoveArray.indexOf(item);
+                this.RemoveArray.splice(index, 1);
             }
+        } else {
+            item.checked = isCheck;
+            for (var i = 0, len = this.ChangeBeforData.length; i < len; i++) {
+                var temp = this.ChangeBeforData[i];
+                if (temp === item) {
+                    //移除数组中的元素
+                    this.ChangeBeforData.splice(i, 1);
+                    return;
+                }
+            }
+            this.ChangeBeforData.push(item);
         }
-        this.ChangeBeforData.push(item);
         // console.log("FINAL:"+item.name + isCheck);
         // Alert.alert('回调',
         //     isCheck);
@@ -174,20 +234,20 @@ const styles = StyleSheet.create({
         marginTop: 10,
         backgroundColor: 'white',
         justifyContent: 'space-between',
-        alignItems:'center',
-        borderBottomWidth:0.5,
-        paddingBottom:1,
-        borderBottomColor:'#64a1ea',
+        alignItems: 'center',
+        borderBottomWidth: 0.5,
+        paddingBottom: 1,
+        borderBottomColor: '#64a1ea',
     },
     keyItemStyleSingle: {
         flexDirection: 'row',
         marginTop: 10,
         backgroundColor: 'white',
-        alignItems:'center',
-        paddingRight:0.5*Swidth,
-        borderBottomWidth:0.5,
-        paddingBottom:1,
-        borderBottomColor:'#64a1ea',
+        alignItems: 'center',
+        paddingRight: 0.5 * Swidth,
+        borderBottomWidth: 0.5,
+        paddingBottom: 1,
+        borderBottomColor: '#64a1ea',
 
     }
 });

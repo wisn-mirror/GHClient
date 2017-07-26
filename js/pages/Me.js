@@ -10,6 +10,7 @@ import {
 import NavigatorBar from "../component/NavigatorBar";
 import CustomKeyPage from './me/CustomKeyPage';
 import SortCustomKeyPage from './me/SortCustomKeyPage';
+
 export default class Me extends Component {
     constructor(props) {
         super(props);
@@ -19,23 +20,35 @@ export default class Me extends Component {
         return (<View>
             <NavigatorBar
                 title="我的"
-                titleStyle={{color:'white'}}
+                titleStyle={{color: 'white'}}
                 style={{backgroundColor: '#5b7ee5'}}
                 statusBarOutViewStyle={{backgroundColor: '#4862b4'}}
             />
             <Text onPress={() => {
                 this.props.navigator.push({
-                   component:CustomKeyPage,
-                    params:{...this.props},
+                    component: CustomKeyPage,
+                    params: {
+                        isRemoveKeyValue: false,
+                        ...this.props,
+                    },
                 })
             }}>customkeypage</Text>
             <Text onPress={() => {
                 this.props.navigator.push({
-                    component:SortCustomKeyPage,
-                    params:{...this.props},
+                    component: CustomKeyPage,
+                    params:{
+                        isRemoveKeyValue: true,
+                        ...this.props,
+                    },
+                })
+            }} style={{marginTop: 10}}>Removekeypage</Text>
+            <Text onPress={() => {
+                this.props.navigator.push({
+                    component: SortCustomKeyPage,
+                    params: {...this.props},
                 })
             }}
-                  style={{marginTop:10}}>Sortcustomkeypage</Text>
+                  style={{marginTop: 10}}>Sortcustomkeypage</Text>
         </View>)
     }
 }
