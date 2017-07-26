@@ -117,6 +117,7 @@ export default class CustomKeyPage extends Component {
             this.props.navigator.pop();
         }else{
             this.LanguageDao.save(FLAG_LAGUAGE.flag_language,this.state.data);
+
         }
     }
 

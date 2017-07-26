@@ -9,6 +9,7 @@ import {
 
 import NavigatorBar from "../component/NavigatorBar";
 import CustomKeyPage from './me/CustomKeyPage';
+import SortCustomKeyPage from './me/SortCustomKeyPage';
 export default class Me extends Component {
     constructor(props) {
         super(props);
@@ -28,7 +29,13 @@ export default class Me extends Component {
                     params:{...this.props},
                 })
             }}>customkeypage</Text>
-
+            <Text onPress={() => {
+                this.props.navigator.push({
+                    component:SortCustomKeyPage,
+                    params:{...this.props},
+                })
+            }}
+                  style={{marginTop:10}}>Sortcustomkeypage</Text>
         </View>)
     }
 }
