@@ -22,7 +22,8 @@ var Swidth = Dimensions.get('window').width;
 export default class CustomKeyPage extends Component {
     constructor(props) {
         super(props);
-        this.isRemoveKey=this.props.isRemoveKeyValue;
+        // this.isRemoveKey=this.props.isRemoveKeyValue;
+        this.isRemoveKey=true;
         console.log("dddddddd:"+this.props.isRemoveKeyValue);
         this.LanguageDao = new LanguageDao(FLAG_LAGUAGE.flag_language);
         this.ChangeBeforData = [];
@@ -140,9 +141,10 @@ export default class CustomKeyPage extends Component {
         for (var i = 0, len = this.RemoveArray.length; i < len; i++) {
             var item = this.RemoveArray[i];
             var index = this.state.data.indexOf(item);
-            this.state.data.splice(index, 1, item);
+            this.state.data.splice(index, 1);
         }
         this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
+        this.RemoveArray.length = 0;
         this.toast.show("移除成功", DURATION.LENGTH_SHORT);
     }
 
