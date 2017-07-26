@@ -6,6 +6,21 @@
     "checked": true
   },
   {
+    "path": "Glang",
+    "name": "Glang",
+    "checked": true
+  },
+  {
+    "path": "Android",
+    "name": "Android",
+    "checked": true
+  },
+  {
+    "path": "Java",
+    "name": "java",
+    "checked": true
+  },
+  {
     "path": "iOS",
     "name": "iOS",
     "checked": true
@@ -21,18 +36,23 @@
     "checked": false
   },
   {
-    "path": " AngularJS",
-    "name": " AngularJS",
+    "path": "AngularJS",
+    "name": "AngularJS",
     "checked": false
   },
   {
-    "path": " jQuery",
-    "name": " jQuery",
+    "path": "JQuery",
+    "name": "JQuery",
     "checked": false
   },
   {
-    "path": " react",
-    "name": " React",
+    "path": "react",
+    "name": "React",
+    "checked": true
+  },
+  {
+    "path": "JavaScript",
+    "name": "JavaScript",
     "checked": true
   }
 ]

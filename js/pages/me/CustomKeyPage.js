@@ -11,16 +11,18 @@ import {
 } from 'react-native';
 
 import NavigatorBar from "../../component/NavigatorBar";
-import LanguageDao from '../../expand/dao/LanguageDao';
+import LanguageDao  ,{FLAG_LAGUAGE} from '../../expand/dao/LanguageDao';
 
-export var FLAG_LAGUAGE = {flag_language: 'flag_language'};
 import CheckBox from 'react-native-check-box';
 import WCheckBox from '../../component/WCheckBox';
 
+var Dimensions = require('Dimensions');
+var Swidth = Dimensions.get('window').width;
 export default class CustomKeyPage extends Component {
     constructor(props) {
         super(props);
         this.LanguageDao = new LanguageDao(FLAG_LAGUAGE.flag_language);
+        this.changeData=[];
         this.state = {
             data: [],
         };
@@ -40,7 +42,7 @@ export default class CustomKeyPage extends Component {
     }
 
     render() {
-        return (<View>
+        return (<View style={{flexDirection:'column',flex:1}}>
             <NavigatorBar
                 title="标签"
                 titleStyle={{color: 'white'}}
@@ -57,53 +59,52 @@ export default class CustomKeyPage extends Component {
                 rightButtonOnPress={() => this.RightButtonOnPress()}
 
             />
-            <ScrollView>
-                <Text style={{height: 200}}>数据：{
-                    JSON.stringify(this.state.data)}</Text>
+            <ScrollView style={{backgroundColor:'white',}}>
                 {this.renderRowView()}
             </ScrollView>
         </View>)
     }
 
-    leftButtonOnPress() {
-        this.props.navigator.pop();
-    }
-    renderRowView(){
-        var views=[];
-        var alldata=JSON.parse(this.state.data);
-        for(var i=0;i<alldata.length-2;i=i+2){
-            console.log('data'+alldata[i])
-            views.push(<View key={i} style={{flexDirection:'row',marginTop:10,backgroundColor:'white',justifyContent:'space-between'}} >
-                {/*<Text>{alldata[i].name}</Text>
-                <Text>{alldata[i+1].name}</Text>*/}
-                {this.renderCheckBox(alldata[i])}
-                {this.renderCheckBox(alldata[i+1])}
-            </View>)
+    renderRowView() {
+        var views = [];
+        if (this.state.data !== null && this.state.data !== null && this.state.data.length !== 0) {
+            var alldata =this.state.data;
+            if ((alldata.length % 2) === 1) {
+                for (var i = 0 ,len=alldata.length-1; i < len; i = i + 2) {
+                    views.push(<View key={i} style={styles.keyItemStyle}>
+                        {this.renderCheckBox(alldata[i])}
+                        {this.renderCheckBox(alldata[i + 1])}
+                    </View>)
+                }
+                var object=alldata[alldata.length - 1];
+                views.push(<View key={alldata.length + 2} style={styles.keyItemStyleSingle}>
+                    {this.renderCheckBox(object)}
+                </View>);
+            }else{
+                for (var i = 0,len=alldata.length; i < len; i = i + 2) {
+                    views.push(<View key={i} style={styles.keyItemStyle}>
+                        {this.renderCheckBox(alldata[i])}
+                        {this.renderCheckBox(alldata[i + 1])}
+                    </View>)
+                }
+            }
+            return views;
         }
-       /* if((alldata.length%2)===1){
-            //jishu
-        }else{
-            views.push(<View key={} style={{flexDirection:'row',marginTop:10,backgroundColor:'white',justifyContent:'space-between'}} >
-                {/!*<Text>{alldata[i].name}</Text>
-                <Text>{alldata[i+1].name}</Text>*!/}
-                {this.renderCheckBox(alldata[i])}
-                {this.renderCheckBox(alldata[i+1])}
-            </View>)
-        }*/
-        return views;
     }
+
     renderCheckBox(item) {
-        var name = 'aaa';
         return (
             <WCheckBox
-                style={{flex: 1}}
-                onClick={(isCheck) => this.checkBoxOnClick(isCheck)}
-                isChecked={false}
+                style={{flexDirection:'row',backgroundColor:'white',flex:1,marginRight:10,marginLeft:10}}
+                onClick={(isCheck) => this.checkBoxOnClick(item,isCheck)}
+                isChecked={item.checked}
                 leftText={item.name}
                 checkedImage={<Image
+                    style={{tintColor:'#5b7ee5'}}
                     source={require('../../../res/images/ic_check_box.png')}
                 />}
                 unCheckedImage={<Image
+                    style={{tintColor:'#5b7ee5'}}
                     source={require('../../../res/images/ic_check_box_outline_blank.png')}
                 />}
             />
@@ -111,12 +112,49 @@ export default class CustomKeyPage extends Component {
     }
 
     RightButtonOnPress() {
-        Alert.alert('回调',
-            'SAVE');
-
+        console.log("save:"+this.changeData.length);
+        if(this.changeData.length===0){
+            this.props.navigator.pop();
+        }else{
+            this.LanguageDao.save(FLAG_LAGUAGE.flag_language,this.state.data);
+        }
     }
-    checkBoxOnClick(isCheck) {
-        console.log("FINAL:"+isCheck);
+
+    leftButtonOnPress() {
+        if(this.changeData.length===0){
+            this.props.navigator.pop();
+        }else{
+            Alert.alert(
+                '保存标签',
+                '退出需要保存标签吗？',
+                [
+                    {text: '保存退出', onPress: () =>{
+                        this.LanguageDao.save(FLAG_LAGUAGE.flag_language,this.state.data);
+                        this.props.navigator.pop();
+                    }},
+                    {text: '不保存退出', onPress: () => {
+                        this.props.navigator.pop();
+                    }, style: 'cancel'},
+                ],
+                { cancelable: false }
+            )
+
+
+        }
+    }
+
+    checkBoxOnClick(item,isCheck) {
+        item.checked=isCheck;
+        for(var i=0,len=this.changeData.length;i<len;i++){
+            var temp=this.changeData[i];
+            if(temp===item){
+                //移除数组中的元素
+                this.changeData.splice(i,1);
+                return ;
+            }
+        }
+        this.changeData.push(item);
+        console.log("FINAL:"+item.name + isCheck);
         // Alert.alert('回调',
         //     isCheck);
 
@@ -127,6 +165,27 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
+    },
+    keyItemStyle: {
+        flexDirection: 'row',
+        marginTop: 10,
+        backgroundColor: 'white',
+        justifyContent: 'space-between',
+        alignItems:'center',
+        borderBottomWidth:0.5,
+        paddingBottom:1,
+        borderBottomColor:'#64a1ea',
+    },
+    keyItemStyleSingle: {
+        flexDirection: 'row',
+        marginTop: 10,
+        backgroundColor: 'white',
+        alignItems:'center',
+        paddingRight:0.5*Swidth,
+        borderBottomWidth:0.5,
+        paddingBottom:1,
+        borderBottomColor:'#64a1ea',
+
     }
 });
 module.exports = CustomKeyPage;

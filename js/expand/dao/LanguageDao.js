@@ -20,7 +20,7 @@ export default class DataRepository {
                 } else {
                     if (result !== null && result !== '') {
                          try {
-                            resolve(result);
+                            resolve(JSON.parse(result));
                         } catch (e) {
                             reject(e);
                         }
