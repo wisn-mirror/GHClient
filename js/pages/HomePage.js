@@ -38,12 +38,13 @@ export default class HomePage extends Component {
                 this.toast.show(message,DURATION.LENGTH_SHORT);
         })
     }
-    componentWillUnmount(){
+
+    componentWillUnmount() {
         this.listener.remove();
     }
     render() {
         return (
-            <View style={{flex:1}}>
+            <View style={{flex:1,backgroundColor:'white'}}>
             <TabNavigator>
                 {this.getTabNavigator('popular', 'Popular', require('../../res/images/ic_polular.png'), Popular)}
                 {this.getTabNavigator('profile', 'Profile', require('../../res/images/ic_trending.png'), Profile)}

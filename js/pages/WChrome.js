@@ -16,10 +16,12 @@ var WEBVIEW_REF = 'webview';
 export default class WChrome extends Component {
     constructor(props) {
         super(props);
+        this.URl=github;
         this.state = {
+            isLoadFinsh:false,
             backButtonEnabled: false,
             forwardButtonEnabled: false,
-            url: github,
+            url: this.URl,
             title: 'CHROME',
             scalesPageToFit: true
         };
@@ -69,20 +71,20 @@ export default class WChrome extends Component {
                 }>reload</Text>
             </View>
             <WebView
-                mediaPlaybackRequiresUserAction={true}
-                onError={this.onError()}
-                onLoad={this.onLoad()}
-                onLoadEnd={this.onLoadEnd()}
-                onLoadStart={this.onLoadStart()}
+                mediaPlaybackRequiresUserAction={false}
+                onError={()=>this.onError()}
+                onLoad={()=>this.onLoad()}
+                onLoadEnd={()=>this.onLoadEnd()}
+                onLoadStart={()=>this.onLoadStart()}
                 ref={WEBVIEW_REF}
-                automaticallyAdjustContentInsets={false}
-                style={styles.webView}
                 source={{uri: this.state.url}}
                 javaScriptEnabled={true}
                 domStorageEnabled={true}
                 decelerationRate="normal"
                 onNavigationStateChange={this.onNavigationStateChange}
-
+                onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest}
+                startInLoadingState={true}
+                scalesPageToFit={this.state.scalesPageToFit}
             />
         </View>);
     }
@@ -90,25 +92,33 @@ export default class WChrome extends Component {
         this.setState({
             backButtonEnabled: navState.canGoBack,
             forwardButtonEnabled: navState.canGoForward,
-            url: navState.url,
-            title: navState.title,
-            scalesPageToFit: true
-        });
-    };
+        })
+        this.titleName=navState.title;
+
+    }
+    onShouldStartLoadWithRequest(){
+
+        return  true;
+    }
     onError() {
+        DeviceEventEmitter.emit("showToast",'onError');
 
     }
 
     onLoad() {
         //加载成功
+        DeviceEventEmitter.emit("showToast",'onLoad');
+        this.state.title=this.titleName;
     }
 
     onLoadEnd() {
         // 加载结束时（无论成功或失败）调用。
+        DeviceEventEmitter.emit("showToast",'onLoadEnd');
 
     }
 
     onLoadStart() {
+        DeviceEventEmitter.emit("showToast",'onLoadStart');
 
     }
     go(){
