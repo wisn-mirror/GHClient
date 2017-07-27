@@ -10,10 +10,11 @@ import {
     StyleSheet,
     Text,
     View,
-    Image
+    Image,
+    DeviceEventEmitter,//事件发射器
 } from 'react-native';
 import TabNavigator from 'react-native-tab-navigator';
-
+import Toast, {DURATION} from 'react-native-easy-toast';
 var CustomBadgeView = require('../component/CustomBadgeView');
 // var Popular = require('./Popular');
 // var Love = require('./Love');
@@ -22,24 +23,35 @@ var CustomBadgeView = require('../component/CustomBadgeView');
 import Popular from './Popular';
 import Profile from './Profile';
 import Love from './Love';
+import WChrome from './WChrome';
 import Me from './Me';
 
 export default class HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTab: 'me',
+            selectedTab: 'love',
         };
     }
-
+    componentDidMount(){
+        this.listener=DeviceEventEmitter.addListener('showToast',(message)=>{
+                this.toast.show(message,DURATION.LENGTH_SHORT);
+        })
+    }
+    componentWillUnmount(){
+        this.listener.remove();
+    }
     render() {
         return (
+            <View style={{flex:1}}>
             <TabNavigator>
                 {this.getTabNavigator('popular', 'Popular', require('../../res/images/ic_polular.png'), Popular)}
                 {this.getTabNavigator('profile', 'Profile', require('../../res/images/ic_trending.png'), Profile)}
-                {this.getTabNavigator('love', 'Love', require('../../res/images/ic_favorite.png'), Love)}
+                {this.getTabNavigator('love', 'Love', require('../../res/images/ic_favorite.png'), WChrome)}
                 {this.getTabNavigator('me', 'Me', require('../../res/images/ic_my.png'), Me)}
             </TabNavigator>
+                <Toast ref={toast => this.toast = toast}/>
+            </View>
         );
     }
 
@@ -57,11 +69,6 @@ export default class HomePage extends Component {
                 <Component {...this.props}/>
             </TabNavigator.Item>
         );
-    }
-    getContentView(contentView){
-        this.props.navigator.push({
-            component:contentView,
-        })
     }
     getView() {
         return <Text style={{color: 'red', fontSize: 14, borderRadius: 7, backgroundColor: 'yellow'}}>e</Text>

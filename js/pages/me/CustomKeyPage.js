@@ -8,6 +8,7 @@ import {
     Image,
     Alert,
     ScrollView,
+    DeviceEventEmitter
 } from 'react-native';
 
 import NavigatorBar from "../../component/NavigatorBar";
@@ -67,7 +68,6 @@ export default class CustomKeyPage extends Component {
             <ScrollView style={{backgroundColor: 'white',}}>
                 {this.renderRowView()}
             </ScrollView>
-            <Toast ref={toast => this.toast = toast}/>
         </View>)
     }
 
@@ -120,17 +120,18 @@ export default class CustomKeyPage extends Component {
     RightButtonOnPress() {
         if (this.isRemoveKey) {
             if (this.RemoveArray.length === 0) {
-                this.toast.show("未选中任何数据", DURATION.LENGTH_SHORT);
+                DeviceEventEmitter.emit("showToast",'未选中任何数据');
             } else {
                 this.removeData();
             }
         } else {
             if (this.ChangeBeforData.length !== 0) {
                 this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
-                this.toast.show('保存成功', DURATION.LENGTH_SHORT);
+                DeviceEventEmitter.emit("showToast",'保存成功');
                 this.ChangeBeforData.length = 0;
             } else {
-                this.toast.show("未修改任何数据", DURATION.LENGTH_SHORT);
+                DeviceEventEmitter.emit("showToast",'未修改任何数据');
+
             }
         }
     }
@@ -143,7 +144,7 @@ export default class CustomKeyPage extends Component {
         }
         this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
         this.RemoveArray.length = 0;
-        this.toast.show("移除成功", DURATION.LENGTH_SHORT);
+        DeviceEventEmitter.emit("showToast",'移除成功');
     }
 
     leftButtonOnPress() {
@@ -217,10 +218,6 @@ export default class CustomKeyPage extends Component {
             }
             this.ChangeBeforData.push(item);
         }
-        // console.log("FINAL:"+item.name + isCheck);
-        // Alert.alert('回调',
-        //     isCheck);
-
     }
 }
 

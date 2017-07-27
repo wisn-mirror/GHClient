@@ -9,6 +9,7 @@ import {
     Alert,
     ListView,
     Image,
+    DeviceEventEmitter,
     RefreshControl,
 } from 'react-native';
 
@@ -98,6 +99,7 @@ class PopularBar extends Component{
                     dataSource:this.state.dataSource.cloneWithRows(result.items),
                     isRefresh:false,
                 })
+                DeviceEventEmitter.emit("showToast",'网络加载成功！');
             })
             .catch(error=>{
                 this.setState({
