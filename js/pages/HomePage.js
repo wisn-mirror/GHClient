@@ -10,8 +10,7 @@ import {
     StyleSheet,
     Text,
     View,
-    Image,
-    Navigator,
+    Image
 } from 'react-native';
 import TabNavigator from 'react-native-tab-navigator';
 

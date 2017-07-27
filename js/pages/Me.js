@@ -27,25 +27,25 @@ export default class Me extends Component {
             <Text onPress={() => {
                 this.props.navigator.push({
                     component: CustomKeyPage,
-                    params: {
-                        isRemoveKeyValue: false,
+                    wisn: {
                         ...this.props,
+                        isRemoveKeyValue: false,
                     },
                 })
             }}>customkeypage</Text>
             <Text onPress={() => {
                 this.props.navigator.push({
                     component: CustomKeyPage,
-                    params:{
-                        isRemoveKeyValue: true,
+                    wisn:{
                         ...this.props,
+                        isRemoveKeyValue: true,
                     },
                 })
             }} style={{marginTop: 10}}>Removekeypage</Text>
             <Text onPress={() => {
                 this.props.navigator.push({
                     component: SortCustomKeyPage,
-                    params: {...this.props},
+                    wisn: {...this.props},
                 })
             }}
                   style={{marginTop: 10}}>Sortcustomkeypage</Text>

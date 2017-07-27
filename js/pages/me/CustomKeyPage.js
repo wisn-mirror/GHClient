@@ -22,9 +22,7 @@ var Swidth = Dimensions.get('window').width;
 export default class CustomKeyPage extends Component {
     constructor(props) {
         super(props);
-        // this.isRemoveKey=this.props.isRemoveKeyValue;
-        this.isRemoveKey=true;
-        console.log("dddddddd:"+this.props.isRemoveKeyValue);
+        this.isRemoveKey=this.props.isRemoveKeyValue;
         this.LanguageDao = new LanguageDao(FLAG_LAGUAGE.flag_language);
         this.ChangeBeforData = [];
         this.RemoveArray = [];
