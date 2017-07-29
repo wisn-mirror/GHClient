@@ -1,15 +1,19 @@
-import React, {
-    Component
-} from 'react';
+import React, {Component, PropTypes} from 'react';
+
 import {
     View,
     Text,
     Image,
     StyleSheet,
     TouchableOpacity,
+    Alert,
 } from 'react-native';
 
 export default class PopularItem extends Component {
+    // static proTypes = {
+    //     callBackItem: PropTypes.func,
+    // }
+
     constructor(props) {
         super(props);
         this.state = {};
@@ -17,7 +21,6 @@ export default class PopularItem extends Component {
 
     render() {
         return (
-            <TouchableOpacity activeOpacity={0.5}>
                 <View style={styles.item_container}>
                     <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.full_name}</Text>
                     <Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.description}</Text>
@@ -45,13 +48,12 @@ export default class PopularItem extends Component {
                                source={require('../../res/images/ic_star.png')}/>
                     </View>
                 </View>
-            </TouchableOpacity>
         );
     }
 }
 const styles = StyleSheet.create({
     item_container: {
-        marginTop:5,
+        marginTop: 5,
         marginBottom: 5,
         marginLeft: 5,
         marginRight: 5,

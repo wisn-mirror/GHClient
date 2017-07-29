@@ -15,7 +15,7 @@ import {
 
 import NavigatorBar from "../component/NavigatorBar";
 import DataRepository from '../expand/dao/DataRepository';
-import PopularItem from '../component/PopularItem';
+import PopularBar from './PopularBar';
 const URL='https://api.github.com/search/repositories?q=';
 import ScrollViewTabView,{ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import LanguageDao  ,{FLAG_LAGUAGE} from '../expand/dao/LanguageDao';
@@ -52,11 +52,12 @@ export default class Popular extends Component {
             tabBarActiveTextColor="white"
             tabBarInactiveTextColor="white"
             tabBarUnderlineStyle={{backgroundColor:'white'}}
-            renderTabBar={()=><ScrollableTabBar/>}
+            renderTabBar={()=><ScrollableTabBar  {...this.props}/>
+            }
         >
             {
                 this.state.data.map(function (item, index, input) {
-                    return item.checked?  <PopularBar key={index} tabLabel={item.name}/>:null;
+                    return item.checked?  <PopularBar  {...this.props}  key={index} tabLabel={item.name} />:null;
                 })
             }
         </ScrollViewTabView>:null;
@@ -73,68 +74,6 @@ export default class Popular extends Component {
         </View>);
     }
 
-}
-class PopularBar extends Component{
-    constructor(props) {
-        super(props);
-        this.DataRepository=new DataRepository();
-        this.state = {
-            result: '',
-            dataSource:new ListView.DataSource({rowHasChanged:(row1,row2)=>row1!==row2}),
-            isRefresh:true,
-        };
-    }
-    componentDidMount(){
-        this.onLoad();
-    }
-    onLoad(){
-        this.setState({
-            isRefresh:true,
-        });
-        var url=this.getUrl(this.text);
-        this.DataRepository.fetchNetRepository(url)
-            .then(result =>{
-                this.setState({
-                    result:JSON.stringify(result),
-                    dataSource:this.state.dataSource.cloneWithRows(result.items),
-                    isRefresh:false,
-                })
-                DeviceEventEmitter.emit("showToast",'网络加载成功！');
-            })
-            .catch(error=>{
-                this.setState({
-                    result:JSON.stringify(error),
-                    isRefresh:false,
-                })
-            })
-    }
-    getUrl(){
-        return URL+this.props.tabLabel+SortByKey;
-    }
-    renderRowItem(rowData){
-        return (
-            <PopularItem
-                rowData={rowData}
-            />
-        );
-    }
-    render() {
-        return (
-            <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this.renderRowItem}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.isRefresh}
-                        onRefresh={()=>{this.onLoad()}}
-                        colors={['#ff8a56','#5b7ee5','#81c0ff']}
-                        tintColor={'#5b7ee5'}
-                        title="Loading..."
-                    />
-                }
-            />
-        );
-    }
 }
 const styles = StyleSheet.create({
     container: {

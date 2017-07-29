@@ -4,24 +4,28 @@ import React, {
 // import {
 //     Navigator
 // } from 'react-native';
-//import Navigator from 'react-native-deprecated-custom-components'
-import  CustomerComponents, {Navigator}
-    from 'react-native-deprecated-custom-components';
+import Navigator from 'react-native-deprecated-custom-components'
+// import  CustomerComponents, {Navigator}
+//     from 'react-native-deprecated-custom-components';
 
 var WelcomePage = require('./WelcomePage');
 export default class setup extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {};
+    }
     render() {
         return (
-            <Navigator
+            <Navigator.Navigator
                 initialRoute={{name: 'WelcomePage', component: WelcomePage}}
                 configureScene={() => {
-                    return Navigator.SceneConfigs.PushFromRight;
+                    return Navigator.Navigator.SceneConfigs.PushFromRight;
                 }}
-
                 renderScene={(route, navigator) => {
                     let Component = route.component;
-                    return <Component {...route.wisn} navigator={navigator}/>;
+                    return <Component {...route.props} navigator={navigator}/>;
                 }}
+                {...this.props}
             />);
     }
 }

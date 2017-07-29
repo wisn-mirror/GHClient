@@ -27,7 +27,7 @@ export default class Me extends Component {
             <Text onPress={() => {
                 this.props.navigator.push({
                     component: CustomKeyPage,
-                    wisn: {
+                    props: {
                         ...this.props,
                         isRemoveKeyValue: false,
                     },
@@ -36,7 +36,7 @@ export default class Me extends Component {
             <Text onPress={() => {
                 this.props.navigator.push({
                     component: CustomKeyPage,
-                    wisn:{
+                    props:{
                         ...this.props,
                         isRemoveKeyValue: true,
                     },
@@ -45,7 +45,7 @@ export default class Me extends Component {
             <Text onPress={() => {
                 this.props.navigator.push({
                     component: SortCustomKeyPage,
-                    wisn: {...this.props},
+                    props: {...this.props},
                 })
             }}
                   style={{marginTop: 10}}>Sortcustomkeypage</Text>

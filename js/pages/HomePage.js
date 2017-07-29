@@ -30,7 +30,7 @@ export default class HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTab: 'love',
+            selectedTab: 'popular',
         };
     }
     componentDidMount(){
@@ -48,7 +48,7 @@ export default class HomePage extends Component {
             <TabNavigator>
                 {this.getTabNavigator('popular', 'Popular', require('../../res/images/ic_polular.png'), Popular)}
                 {this.getTabNavigator('profile', 'Profile', require('../../res/images/ic_trending.png'), Profile)}
-                {this.getTabNavigator('love', 'Love', require('../../res/images/ic_favorite.png'), WChrome)}
+                {this.getTabNavigator('love', 'Love', require('../../res/images/ic_favorite.png'), Love)}
                 {this.getTabNavigator('me', 'Me', require('../../res/images/ic_my.png'), Me)}
             </TabNavigator>
                 <Toast ref={toast => this.toast = toast}/>
@@ -66,6 +66,7 @@ export default class HomePage extends Component {
                 renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#5b7ee5'}]} source={iconRes}/>}
                 renderBadge={() => this.getView()}
                 onPress={() => this.setState({selectedTab: selectedTab1})}
+                {...this.props}
             >
                 <Component {...this.props}/>
             </TabNavigator.Item>
