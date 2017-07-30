@@ -8,6 +8,8 @@ import {
     TextInput,
     DeviceEventEmitter,
     WebView,
+    Image,
+    Alert,
 } from 'react-native';
 
 import NavigatorBar from "../../component/NavigatorBar";
@@ -21,13 +23,23 @@ export default class PopularPage extends Component {
             isLoadFinsh:false,
             backButtonEnabled: false,
             forwardButtonEnabled: false,
-            url: this.URl,
-            title: 'CHROME',
+            url: this.props.html_url,
+            title: this.props.title,
             scalesPageToFit: true
         };
     }
+    leftButtonOnPress(){
+        if(this.state.backButtonEnabled){
+            this.refs[WEBVIEW_REF].goBack();
+        }else{
+            this.props.navigator.pop();
+        }
+    }
+    RightButtonOnPress(){
 
+    }
     render() {
+        console.log("title",this.state.title );
         return (<View style={styles.container}>
             <NavigatorBar
                 title={this.state.title}
@@ -35,8 +47,17 @@ export default class PopularPage extends Component {
                 statusBarOutViewStyle={{backgroundColor: '#4862b4'}}
                 titleStyle={{color: 'white'}}
                 statusBar={{backgroundColor: '#4862b4', barStyle: 'light-content'}}
+                leftButton={
+                    <Image style={{width: 22, height: 22, margin: 5}}
+                           source={require('../../../res/images/ic_arrow_back_white_36pt.png')}/>
+                }
+                rightButton={
+                    <Text style={{color: 'white', marginRight: 5, fontSize: 16}}>Share</Text>
+                }
+                leftButtonOnPress={() => this.leftButtonOnPress()}
+                rightButtonOnPress={() => this.RightButtonOnPress()}
             />
-            <View style={{
+           {/* <View style={{
                 flexDirection: 'row',
                 height: 40,
                 alignItems: 'center',
@@ -69,7 +90,7 @@ export default class PopularPage extends Component {
                 }>Go</Text>
                 <Text style={{fontSize: 18, marginLeft: 3}} onPress={() => this.reload()
                 }>reload</Text>
-            </View>
+            </View>*/}
             <WebView
                 mediaPlaybackRequiresUserAction={false}
                 onError={()=>this.onError()}
@@ -108,7 +129,6 @@ export default class PopularPage extends Component {
     onLoad() {
         //加载成功
         DeviceEventEmitter.emit("showToast",'onLoad');
-        this.state.title=this.titleName;
     }
 
     onLoadEnd() {

@@ -16,7 +16,7 @@ export  default class WelcomePage extends  Component{
                     component:HomePage,
                     props:{
                         ...this.props,
-                    },
+                    }
                 }
             )
 

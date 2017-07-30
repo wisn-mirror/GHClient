@@ -17,7 +17,11 @@ export default class setup extends Component {
     render() {
         return (
             <Navigator.Navigator
-                initialRoute={{name: 'WelcomePage', component: WelcomePage}}
+                initialRoute={{name: 'WelcomePage', component: WelcomePage,
+                    props:{
+                        ...this.props,
+                    },
+                }}
                 configureScene={() => {
                     return Navigator.Navigator.SceneConfigs.PushFromRight;
                 }}
@@ -25,7 +29,6 @@ export default class setup extends Component {
                     let Component = route.component;
                     return <Component {...route.props} navigator={navigator}/>;
                 }}
-                {...this.props}
             />);
     }
 }

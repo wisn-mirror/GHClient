@@ -19,13 +19,11 @@ import PopularItem from '../component/PopularItem';
 import PopularPage from './me/PopularPage';
 
 const URL = 'https://api.github.com/search/repositories?q=';
-import ScrollViewTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
-import LanguageDao, {FLAG_LAGUAGE} from '../expand/dao/LanguageDao';
-
 const SortByKey = '&sort=starts';
 export default class PopularBar extends Component {
     constructor(props) {
         super(props);
+
         this.DataRepository = new DataRepository();
         this.state = {
             result: '',
@@ -42,7 +40,7 @@ export default class PopularBar extends Component {
         this.setState({
             isRefresh: true,
         });
-        var url = this.getUrl(this.text);
+        var url = this.getUrl();
         this.DataRepository.fetchNetRepository(url)
             .then(result => {
                 this.setState({
@@ -64,24 +62,25 @@ export default class PopularBar extends Component {
         return URL + this.props.tabLabel + SortByKey;
     }
 
-    callBackItem() {
-        console.log("DATA", "   iiii" + rowData + this.props.navigator);
+    callBackItemB(rowData) {
         this.props.navigator.push({
             component: PopularPage,
-            props: {
+            props:{
                 ...this.props,
+                html_url:rowData.html_url,
+                title:rowData.full_name,
             }
         });
     }
 
-    renderRowItem(rowData) {
+    renderRowItem(rowData,sectionID,rowID,
+                  RowHighlighted) {
         return (
-            <TouchableOpacity activeOpacity={0.5} onPress={() => this.callBackItem} {...this.props}>
                 <PopularItem
                     {...this.props}
                     rowData={rowData}
+                    callBackItem={()=>this.callBackItemB(rowData)}
                 />
-            </TouchableOpacity>
         );
     }
 
@@ -89,7 +88,9 @@ export default class PopularBar extends Component {
         return (
             <ListView
                 dataSource={this.state.dataSource}
-                renderRow={this.renderRowItem}
+                renderRow={(rowData,sectionID,rowID,
+                    RowHighlighted)=>this.renderRowItem(rowData,sectionID,rowID,
+                    RowHighlighted)}
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.isRefresh}

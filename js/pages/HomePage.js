@@ -66,7 +66,6 @@ export default class HomePage extends Component {
                 renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#5b7ee5'}]} source={iconRes}/>}
                 renderBadge={() => this.getView()}
                 onPress={() => this.setState({selectedTab: selectedTab1})}
-                {...this.props}
             >
                 <Component {...this.props}/>
             </TabNavigator.Item>

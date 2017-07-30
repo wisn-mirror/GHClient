@@ -19,7 +19,6 @@ import PopularBar from './PopularBar';
 const URL='https://api.github.com/search/repositories?q=';
 import ScrollViewTabView,{ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import LanguageDao  ,{FLAG_LAGUAGE} from '../expand/dao/LanguageDao';
-const SortByKey='&sort=starts';
 export default class Popular extends Component {
     constructor(props) {
         super(props);
@@ -27,7 +26,6 @@ export default class Popular extends Component {
         this.LanguageDao=new LanguageDao();
         this.state = {
             data: [],
-
         };
     }
     onLoad(){
@@ -47,18 +45,21 @@ export default class Popular extends Component {
         this.onLoad();
     }
     render() {
+
         let content=this.state.data.length>0?  <ScrollViewTabView
             tabBarBackgroundColor='#5b7ee5'
             tabBarActiveTextColor="white"
             tabBarInactiveTextColor="white"
             tabBarUnderlineStyle={{backgroundColor:'white'}}
-            renderTabBar={()=><ScrollableTabBar  {...this.props}/>
-            }
+            renderTabBar={()=><ScrollableTabBar />}
         >
+            {this.getContentView()}
             {
-                this.state.data.map(function (item, index, input) {
-                    return item.checked?  <PopularBar  {...this.props}  key={index} tabLabel={item.name} />:null;
-                })
+                /*this.state.data.map(function (item, index, input) {
+                    return item.checked?  <PopularBar
+                        tabLabel={item.name}
+                        key={index}  {...this.props}/>:null;
+                })*/
             }
         </ScrollViewTabView>:null;
 
@@ -70,10 +71,22 @@ export default class Popular extends Component {
                 titleStyle={{color: 'white'}}
                 statusBar={{backgroundColor:'#4862b4',barStyle:'light-content'}}
             />
-            {content}
+            {content }
         </View>);
     }
 
+    getContentView(){
+        var views=[];
+        for( var i=0,len=this.state.data.length;i<len;i++){
+           var oneTemp= this.state.data[i];
+            if(oneTemp.checked){
+                views.push(<PopularBar
+                    tabLabel={oneTemp.name}
+                    key={i}  {...this.props}/>);
+            }
+        }
+        return views;
+    }
 }
 const styles = StyleSheet.create({
     container: {

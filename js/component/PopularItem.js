@@ -10,18 +10,24 @@ import {
 } from 'react-native';
 
 export default class PopularItem extends Component {
-    // static proTypes = {
-    //     callBackItem: PropTypes.func,
-    // }
 
     constructor(props) {
         super(props);
         this.state = {};
     }
 
+    static proTypes = {
+        callBackItem: PropTypes.func,
+    }
+
+
     render() {
+        // console.log("func", this.callBackItem)
         return (
-                <View style={styles.item_container}>
+            <TouchableOpacity activeOpacity={0.5} onPress={()=>
+                this.props.callBackItem(this.props.rowData)
+            }>
+            <View style={styles.item_container}>
                     <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.full_name}</Text>
                     <Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.description}</Text>
                     <View
@@ -48,6 +54,7 @@ export default class PopularItem extends Component {
                                source={require('../../res/images/ic_star.png')}/>
                     </View>
                 </View>
+            </TouchableOpacity>
         );
     }
 }
