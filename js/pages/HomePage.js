@@ -24,13 +24,14 @@ import Popular from './Popular';
 import Profile from './Profile';
 import Love from './Love';
 import WChrome from './WChrome';
+import TrendingTest from './TrendingTest';
 import Me from './Me';
 
 export default class HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTab: 'popular',
+            selectedTab: 'love',
         };
     }
     componentDidMount(){
@@ -48,7 +49,7 @@ export default class HomePage extends Component {
             <TabNavigator>
                 {this.getTabNavigator('popular', 'Popular', require('../../res/images/ic_polular.png'), Popular)}
                 {this.getTabNavigator('profile', 'Profile', require('../../res/images/ic_trending.png'), Profile)}
-                {this.getTabNavigator('love', 'Love', require('../../res/images/ic_favorite.png'), Love)}
+                {this.getTabNavigator('love', 'Love', require('../../res/images/ic_favorite.png'), TrendingTest)}
                 {this.getTabNavigator('me', 'Me', require('../../res/images/ic_my.png'), Me)}
             </TabNavigator>
                 <Toast ref={toast => this.toast = toast}/>

@@ -41,14 +41,14 @@ export default class PopularBar extends Component {
             isRefresh: true,
         });
         var url = this.getUrl();
-        this.DataRepository.fetchNetRepository(url)
+        this.DataRepository.fetchResponsitory(url)
             .then(result => {
                 this.setState({
                     result: JSON.stringify(result),
                     dataSource: this.state.dataSource.cloneWithRows(result.items),
                     isRefresh: false,
                 })
-                DeviceEventEmitter.emit("showToast", '网络加载成功！');
+                // DeviceEventEmitter.emit("showToast", '网络加载成功！');
             })
             .catch(error => {
                 this.setState({
