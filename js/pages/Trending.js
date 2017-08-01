@@ -8,11 +8,11 @@ import {
 
 import NavigatorBar from "../component/NavigatorBar";
 import DataRepository from '../expand/dao/DataRepository';
-import PopularBar from './PopularBar';
+import TrendingBar from './TrendingBar';
 import ScrollViewTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import LanguageDao, {FLAG_LAGUAGE} from '../expand/dao/LanguageDao';
 
-export default class Popular extends Component {
+export default class Trending extends Component {
     constructor(props) {
         super(props);
         this.DataRepository = new DataRepository();
@@ -23,7 +23,7 @@ export default class Popular extends Component {
     }
 
     onLoad() {
-        this.LanguageDao.fetch(FLAG_LAGUAGE.flag_key)
+        this.LanguageDao.fetch(FLAG_LAGUAGE.flag_language)
             .then(result => {
                 this.setState({
                     data: result,
@@ -54,7 +54,7 @@ export default class Popular extends Component {
 
         return (<View style={styles.container}>
             <NavigatorBar
-                title="最热"
+                title="Trending"
                 style={{backgroundColor: '#5b7ee5'}}
                 statusBarOutViewStyle={{backgroundColor: '#4862b4'}}
                 titleStyle={{color: 'white'}}
@@ -69,7 +69,7 @@ export default class Popular extends Component {
         for (var i = 0, len = this.state.data.length; i < len; i++) {
             var oneTemp = this.state.data[i];
             if (oneTemp.checked) {
-                views.push(<PopularBar
+                views.push(<TrendingBar
                     tabLabel={oneTemp.name}
                     key={i}  {...this.props}/>);
             }
@@ -85,4 +85,4 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     }
 });
-module.exports = Popular;
+module.exports = Trending;

@@ -21,7 +21,7 @@ var Swidth = Dimensions.get('window').width;
 export default class SortCustomKeyPage extends Component {
     constructor(props) {
         super(props);
-        this.LanguageDao = new LanguageDao(FLAG_LAGUAGE.flag_language);
+        this.LanguageDao = new LanguageDao();
         this.OldArray=[];
         this.ResultArray=[];
         this.ChangeBeforData = [];

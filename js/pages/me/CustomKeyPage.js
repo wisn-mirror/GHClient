@@ -24,7 +24,7 @@ export default class CustomKeyPage extends Component {
     constructor(props) {
         super(props);
         this.isRemoveKey=this.props.isRemoveKeyValue;
-        this.LanguageDao = new LanguageDao(FLAG_LAGUAGE.flag_language);
+        this.LanguageDao = new LanguageDao();
         this.ChangeBeforData = [];
         this.RemoveArray = [];
         this.state = {

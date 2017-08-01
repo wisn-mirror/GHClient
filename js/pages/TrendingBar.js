@@ -20,7 +20,7 @@ import PopularPage from './me/PopularPage';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const SortByKey = '&sort=starts';
-export default class PopularBar extends Component {
+export default class TrendingBar extends Component {
     constructor(props) {
         super(props);
 
