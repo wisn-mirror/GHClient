@@ -2,24 +2,16 @@ import React, {
     Component
 } from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
-    TextInput,
-    Alert,
     ListView,
-    Image,
-    DeviceEventEmitter,
     RefreshControl,
-    TouchableOpacity,
 } from 'react-native';
 
 import DataRepository ,{Flag_storage} from '../expand/dao/DataRepository';
-import PopularItem from '../component/PopularItem';
+import TrendingItem from '../component/TrendingItem';
 import PopularPage from './me/PopularPage';
 
-const URL = 'https://api.github.com/search/repositories?q=';
-const SortByKey = '&sort=starts';
+const URL = 'https://github.com/trending/';
+const SortByKey ='?since=daily';
 export default class TrendingBar extends Component {
     constructor(props) {
         super(props);
@@ -41,8 +33,10 @@ export default class TrendingBar extends Component {
             isRefresh: true,
         });
         var url = this.getUrl();
+        console.log("getUrl:"+url);
         this.DataRepository.fetchResponsitory(url)
             .then(result => {
+                console.log("result:"+result);
                 this.setState({
                     result: JSON.stringify(result),
                     dataSource: this.state.dataSource.cloneWithRows(result.items),
@@ -51,6 +45,7 @@ export default class TrendingBar extends Component {
                 // DeviceEventEmitter.emit("showToast", '网络加载成功！');
             })
             .catch(error => {
+                console.log("error:"+error);
                 this.setState({
                     result: JSON.stringify(error),
                     isRefresh: false,
@@ -76,7 +71,7 @@ export default class TrendingBar extends Component {
     renderRowItem(rowData,sectionID,rowID,
                   RowHighlighted) {
         return (
-                <PopularItem
+                <TrendingItem
                     {...this.props}
                     rowData={rowData}
                     callBackItem={()=>this.callBackItemB(rowData)}
