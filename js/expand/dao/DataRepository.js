@@ -69,7 +69,8 @@ export default class DataRepository {
                         });
                         resolve(result);
                     }).catch(error=>{
-                        reject(error);
+                        console.log("error",error)
+                    reject(error);
                 })
             }else{
                 fetch(url)

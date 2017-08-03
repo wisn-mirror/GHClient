@@ -16,7 +16,7 @@ export default class TrendingBar extends Component {
     constructor(props) {
         super(props);
 
-        this.DataRepository = new DataRepository(Flag_storage.flag_popular);
+        this.DataRepository = new DataRepository(Flag_storage.flag_trending);
         this.state = {
             result: '',
             dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
@@ -36,16 +36,14 @@ export default class TrendingBar extends Component {
         console.log("getUrl:"+url);
         this.DataRepository.fetchResponsitory(url)
             .then(result => {
-                console.log("result:"+result);
                 this.setState({
                     result: JSON.stringify(result),
-                    dataSource: this.state.dataSource.cloneWithRows(result.items),
+                    dataSource: this.state.dataSource.cloneWithRows(result),
                     isRefresh: false,
                 })
-                // DeviceEventEmitter.emit("showToast", '网络加载成功！');
             })
             .catch(error => {
-                console.log("error:"+error);
+                console.log("error:"+JSON.stringify(error));
                 this.setState({
                     result: JSON.stringify(error),
                     isRefresh: false,

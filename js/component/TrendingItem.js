@@ -27,7 +27,7 @@ export default class TrendingItem extends Component {
                 this.props.callBackItem(this.props.rowData)
             }>
             <View style={styles.item_container}>
-                    <Text style={{color: '#000', fontSize: 16}}>条目</Text>
+                    <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.fullName}</Text>
                     {/*<Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.description}</Text>*/}
                     {/*<View*/}
                         {/*style={{*/}
