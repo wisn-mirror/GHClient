@@ -9,8 +9,8 @@ import {
 import DataRepository ,{Flag_storage} from '../expand/dao/DataRepository';
 import TrendingItem from '../component/TrendingItem';
 import PopularPage from './me/PopularPage';
-
 const URL = 'https://github.com/trending/';
+const GitHubURL = 'https://github.com';
 const SortByKey ='?since=daily';
 export default class TrendingBar extends Component {
     constructor(props) {
@@ -43,7 +43,7 @@ export default class TrendingBar extends Component {
                 })
             })
             .catch(error => {
-                console.log("error:"+JSON.stringify(error));
+                // console.log("error:"+JSON.stringify(error));
                 this.setState({
                     result: JSON.stringify(error),
                     isRefresh: false,
@@ -60,8 +60,8 @@ export default class TrendingBar extends Component {
             component: PopularPage,
             props:{
                 ...this.props,
-                html_url:rowData.html_url,
-                title:rowData.full_name,
+                html_url:GitHubURL+rowData.contributorsUrl,
+                title:rowData.fullName,
             }
         });
     }

@@ -4,6 +4,7 @@ import React, {
 import {
     View,
     StyleSheet,
+    Image,
 } from 'react-native';
 
 import NavigatorBar from "../component/NavigatorBar";
@@ -59,11 +60,23 @@ export default class Trending extends Component {
                 statusBarOutViewStyle={{backgroundColor: '#4862b4'}}
                 titleStyle={{color: 'white'}}
                 statusBar={{backgroundColor: '#4862b4', barStyle: 'light-content'}}
+                // leftButton={
+                //     <Image style={{width: 22, height: 22, margin: 5}}
+                //            source={require('../../../res/images/ic_arrow_back_white_36pt.png')}/>
+                // }
+                rightButton={
+                    <Image style={{width: 22, height: 22, marginRight: 15}}
+                               source={require('../../res/images/ic_more_vert_white_48pt.png')}/>
+                }
+                // leftButtonOnPress={() => this.leftButtonOnPress()}
+                rightButtonOnPress={() => this.RightButtonOnPress()}
             />
             {content}
         </View>);
     }
+    RightButtonOnPress(){
 
+    }
     getContentView() {
         var views = [];
         for (var i = 0, len = this.state.data.length; i < len; i++) {
