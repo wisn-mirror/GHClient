@@ -13,14 +13,31 @@ export default class TrendingItem extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isChecked:false,
+            iconStart:require("../../res/images/ic_unstar_transparent.png"),
+        };
     }
 
     static proTypes = {
         callBackItem: PropTypes.func,
     }
-
-
+    changeStartView(){
+        this.changeStatus(!this.state.isChecked)
+    }
+    changeStatus(isCheck){
+        this.setState({
+            isChecked:isCheck,
+            iconStart:isCheck?require("../../res/images/ic_unstar_navbar.png")
+                :require("../../res/images/ic_unstar_transparent.png"),
+        });
+    }
+    getStartView(){
+        return <TouchableOpacity onPress={()=>this.changeStartView()}>
+            <Image style={{width: 22, height: 22, padding:4,tintColor: "#5b7ee5"}}
+                   source={this.state.iconStart}/>
+            </TouchableOpacity>
+    }
     render() {
         // console.log("log"+JSON.stringify(this.props.rowData));
         let description='<p>'+this.props.rowData.description+'</p>'
@@ -58,8 +75,7 @@ export default class TrendingItem extends Component {
                             {/*<Text style={{color: 'gray', fontSize: 12}}>Starts:</Text>*/}
                             {/*<Text style={{color: 'gray', fontSize: 12}}>{this.props.rowData.stargazers_count}</Text>*/}
                         {/*</View>*/}
-                        <Image style={{width: 18, height: 18, tintColor: "#5b7ee5"}}
-                               source={require('../../res/images/ic_star.png')}/>
+                        {this.getStartView()}
                     </View>
                 </View>
             </TouchableOpacity>
