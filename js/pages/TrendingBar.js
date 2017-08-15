@@ -15,7 +15,6 @@ const SortByKey ='?since=daily';
 export default class TrendingBar extends Component {
     constructor(props) {
         super(props);
-
         this.DataRepository = new DataRepository(Flag_storage.flag_trending);
         this.state = {
             result: '',
@@ -25,16 +24,26 @@ export default class TrendingBar extends Component {
     }
 
     componentDidMount() {
-        this.onLoad();
+        this.onLoad(this.props.timeSpan,false);
     }
 
-    onLoad() {
+    /**
+     * 收到props属性的时候
+     * @param nextProps
+     */
+    componentWillReceiveProps(nextProps) {
+        console.log(this.props.timeSpan+ ""+nextProps.timeSpan);
+        if(this.props.timeSpan!==nextProps.timeSpan){
+            this.onLoad(nextProps,true);
+        }
+    }
+    onLoad(timeSpan,isRefresh) {
         this.setState({
             isRefresh: true,
         });
-        var url = this.getUrl();
+        var url = this.getUrl(timeSpan);
         console.log("getUrl:"+url);
-        this.DataRepository.fetchResponsitory(url)
+        this.DataRepository.fetchResponsitory(url,isRefresh)
             .then(result => {
                 this.setState({
                     result: JSON.stringify(result),
@@ -51,8 +60,8 @@ export default class TrendingBar extends Component {
             })
     }
 
-    getUrl() {
-        return URL + this.props.tabLabel + SortByKey;
+    getUrl(timeSpan) {
+        return URL + this.props.tabLabel + "?"+timeSpan;
     }
 
     callBackItemB(rowData) {
@@ -88,7 +97,7 @@ export default class TrendingBar extends Component {
                     <RefreshControl
                         refreshing={this.state.isRefresh}
                         onRefresh={() => {
-                            this.onLoad()
+                            this.onLoad(this.props.timeSpan,false)
                         }}
                         colors={['#ff8a56', '#5b7ee5', '#81c0ff']}
                         tintColor={'#5b7ee5'}

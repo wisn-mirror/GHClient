@@ -216,7 +216,7 @@ var Popover = React.createClass({
             popoverOrigin.y + contentSize.height / 2);
         return new Point(anchorPoint.x - popoverCenter.x, anchorPoint.y - popoverCenter.y);
     },
-    componentWillReceiveProps(nextProps:any) {
+    componentWillReceiveProps(nextProps) {
         var willBeVisible = nextProps.isVisible;
         var {
             isVisible,
@@ -348,7 +348,7 @@ var Popover = React.createClass({
                         top: popoverOrigin.y,
                         left: popoverOrigin.x,
                     }, ...extendedStyles.popover]}>
-                        <Animated.View style={arrowStyle}/>
+                       {/* <Animated.View style={arrowStyle}/>*/}
                         <Animated.View ref='content' onLayout={this.measureContent} style={contentStyle}>
                             {this.props.children}
                         </Animated.View>
@@ -372,6 +372,7 @@ var styles = StyleSheet.create({
     },
     containerVisible: {
         opacity: 1,
+
     },
     background: {
         top: 0,
@@ -379,7 +380,7 @@ var styles = StyleSheet.create({
         left: 0,
         right: 0,
         position: 'absolute',
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        // backgroundColor: 'rgba(0,0,0,0.5)',
     },
     popover: {
         backgroundColor: 'transparent',

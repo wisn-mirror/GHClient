@@ -33,15 +33,15 @@ export default class PopularBar extends Component {
     }
 
     componentDidMount() {
-        this.onLoad();
+        this.onLoad(false);
     }
 
-    onLoad() {
+    onLoad(isRefresh) {
         this.setState({
             isRefresh: true,
         });
         var url = this.getUrl();
-        this.DataRepository.fetchResponsitory(url)
+        this.DataRepository.fetchResponsitory(url,isRefresh)
             .then(result => {
                 this.setState({
                     result: JSON.stringify(result),
@@ -95,7 +95,7 @@ export default class PopularBar extends Component {
                     <RefreshControl
                         refreshing={this.state.isRefresh}
                         onRefresh={() => {
-                            this.onLoad()
+                            this.onLoad(false)
                         }}
                         colors={['#ff8a56', '#5b7ee5', '#81c0ff']}
                         tintColor={'#5b7ee5'}

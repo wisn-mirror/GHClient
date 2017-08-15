@@ -10,31 +10,41 @@ export default class DataRepository {
         this.flag=flag;
         if(this.flag===Flag_storage.flag_trending)this.trending=new GitHubTrending();
     }
-    fetchResponsitory(url) {
+    fetchResponsitory(url,isRefresh) {
         return new Promise((resolve, reject) => {
-            this.fetchLocalResponsitory(url)
-                .then(result => {
-                    var dataTemp= JSON.parse(result);
-                    if (result&&this.checkDataTime(dataTemp.updateTime)) {
-                        resolve(dataTemp.data);
-                        DeviceEventEmitter.emit("showToast", '本地缓存！');
-                    } else {
-                        this.fetchNetRepository(url)
-                            .then(result => {
-                                resolve(result)
-                            }).catch(e => {
-                            reject(e);
-                        })
-                    }
-                }).catch(e => {
-                //本地数据异常
+            if(!isRefresh){
+                this.fetchLocalResponsitory(url)
+                    .then(result => {
+                        var dataTemp= JSON.parse(result);
+                        if (result&&this.checkDataTime(dataTemp.updateTime)) {
+                            resolve(dataTemp.data);
+                            DeviceEventEmitter.emit("showToast", '本地缓存！');
+                        } else {
+                            this.fetchNetRepository(url)
+                                .then(result => {
+                                    resolve(result)
+                                }).catch(e => {
+                                reject(e);
+                            })
+                        }
+                    }).catch(e => {
+                    //本地数据异常
+                    this.fetchNetRepository(url)
+                        .then(result => {
+                            resolve(result)
+                        }).catch(e => {
+                        reject(e);
+                    })
+                })
+            }else{
                 this.fetchNetRepository(url)
                     .then(result => {
                         resolve(result)
                     }).catch(e => {
                     reject(e);
                 })
-            })
+            }
+
         })
     }
 
@@ -63,7 +73,7 @@ export default class DataRepository {
                             reject(new Error("data is null"));
                             return ;
                         }
-                        DeviceEventEmitter.emit("showToast", '网络数据！');
+                        DeviceEventEmitter.emit("showToast", '网络数据！trending');
                         this.saveRepository(url,result,(error)=>{
                             console.log("保存网络数据到本地数据！")
                         });
