@@ -8,13 +8,12 @@ import {
     Image,
     Alert,
     ScrollView,
-    DeviceEventEmitter
+    DeviceEventEmitter,
 } from 'react-native';
 
 import NavigatorBar from "../../component/NavigatorBar";
-import LanguageDao, {FLAG_LAGUAGE} from '../../expand/dao/LanguageDao';
 import Toast, {DURATION} from 'react-native-easy-toast';
-
+import LanguageDao, {FLAG_LAGUAGE} from '../../expand/dao/LanguageDao';
 import CheckBox from 'react-native-check-box';
 import WCheckBox from '../../component/WCheckBox';
 
@@ -24,6 +23,12 @@ export default class CustomKeyPage extends Component {
     constructor(props) {
         super(props);
         this.isRemoveKey=this.props.isRemoveKeyValue;
+        this.language_flag=this.props.language_flag;
+        if(this.language_flag===FLAG_LAGUAGE.flag_language){
+            this.tableName="语言"
+        }else{
+            this.tableName="标签"
+        }
         this.LanguageDao = new LanguageDao();
         this.ChangeBeforData = [];
         this.RemoveArray = [];
@@ -33,7 +38,10 @@ export default class CustomKeyPage extends Component {
     }
 
     componentDidMount() {
-        this.LanguageDao.fetch(FLAG_LAGUAGE.flag_language)
+        this.load();
+    }
+    load(){
+        this.LanguageDao.fetch( this.language_flag)
             .then(result1 => {
                 this.setState({
                     data: result1,
@@ -44,9 +52,8 @@ export default class CustomKeyPage extends Component {
             });
         })
     }
-
     render() {
-        let titleName = this.isRemoveKey ? '标签移除' : '自定义标签';
+        let titleName = this.isRemoveKey ? this.tableName+'移除' : '自定义'+this.tableName;
         let rightTitle = this.isRemoveKey ? '移除':'保存';
         return (<View style={{flexDirection: 'column', flex: 1}}>
             <NavigatorBar
@@ -123,10 +130,12 @@ export default class CustomKeyPage extends Component {
                 DeviceEventEmitter.emit("showToast",'未选中任何数据');
             } else {
                 this.removeData();
+                this.load();
+                DeviceEventEmitter.emit("showToast",'移除成功');
             }
         } else {
             if (this.ChangeBeforData.length !== 0) {
-                this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
+                this.LanguageDao.save( this.language_flag, this.state.data);
                 DeviceEventEmitter.emit("showToast",'保存成功');
                 this.ChangeBeforData.length = 0;
             } else {
@@ -142,9 +151,10 @@ export default class CustomKeyPage extends Component {
             var index = this.state.data.indexOf(item);
             this.state.data.splice(index, 1);
         }
-        this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
+        this.LanguageDao.save( this.language_flag, this.state.data);
         this.RemoveArray.length = 0;
         DeviceEventEmitter.emit("showToast",'移除成功');
+        this.load();
     }
 
     leftButtonOnPress() {
@@ -152,8 +162,8 @@ export default class CustomKeyPage extends Component {
         if (this.isRemoveKey) {
             if (this.RemoveArray.length > 0) {
                 Alert.alert(
-                    '移除标签',
-                    '退出需要移除标签吗？',
+                    '移除'+this.tableName,
+                    '退出需要移除'+this.tableName+'吗？',
                     [
                         {
                             text: '移除并退出', onPress: () => {
@@ -177,12 +187,12 @@ export default class CustomKeyPage extends Component {
                 this.props.navigator.pop();
             } else {
                 Alert.alert(
-                    '保存标签',
-                    '退出需要保存标签吗？',
+                    '保存'+this.tableName,
+                    '退出需要保存'+this.tableName+'吗？',
                     [
                         {
                             text: '保存退出', onPress: () => {
-                            this.LanguageDao.save(FLAG_LAGUAGE.flag_language, this.state.data);
+                            this.LanguageDao.save(this.language_flag, this.state.data);
                             this.props.navigator.pop();
                         }
                         },

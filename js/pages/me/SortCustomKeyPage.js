@@ -21,6 +21,12 @@ var Swidth = Dimensions.get('window').width;
 export default class SortCustomKeyPage extends Component {
     constructor(props) {
         super(props);
+        this.language_flag=this.props.language_flag;
+        if(this.language_flag===FLAG_LAGUAGE.flag_language){
+            this.tableName="语言"
+        }else{
+            this.tableName="标签"
+        }
         this.LanguageDao = new LanguageDao();
         this.OldArray=[];
         this.ResultArray=[];
@@ -31,7 +37,7 @@ export default class SortCustomKeyPage extends Component {
     }
 
     componentDidMount() {
-        this.LanguageDao.fetch(FLAG_LAGUAGE.flag_language)
+        this.LanguageDao.fetch(this.language_flag)
             .then(result1 => {
                 this.filterKey(result1);
             }).catch(error => {
@@ -130,7 +136,7 @@ export default class SortCustomKeyPage extends Component {
             var index=this.OldArray.indexOf(item);
             this.ResultArray.splice(index,1,this.state.ChangeArrayData[i])
         }
-        this.LanguageDao.save(FLAG_LAGUAGE.flag_language,this.ResultArray );
+        this.LanguageDao.save( this.language_flag,this.ResultArray );
 
     }
     /**
