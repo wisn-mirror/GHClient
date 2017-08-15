@@ -14,16 +14,19 @@ export default class TrendingItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isChecked:false,
-            iconStart:require("../../res/images/ic_unstar_transparent.png"),
+            isChecked:this.props.rowData.isFavorite,
+            iconStart:this.props.rowData.isFavorite?require("../../res/images/ic_unstar_navbar.png")
+                :require("../../res/images/ic_unstar_transparent.png"),
         };
     }
 
     static proTypes = {
         callBackItem: PropTypes.func,
+        isFavorite:PropTypes.func,
     }
-    changeStartView(){
-        this.changeStatus(!this.state.isChecked)
+    changeStartView(item,isFavorite){
+        this.changeStatus(!isFavorite)
+        this.props.isFavorite(item,!isFavorite)
     }
     changeStatus(isCheck){
         this.setState({
@@ -33,20 +36,22 @@ export default class TrendingItem extends Component {
         });
     }
     getStartView(){
-        return <TouchableOpacity onPress={()=>this.changeStartView()}>
+        return <TouchableOpacity onPress={()=>this.changeStartView(this.props.rowData,this.state.isChecked)}>
             <Image style={{width: 22, height: 22, padding:4,tintColor: "#5b7ee5"}}
                    source={this.state.iconStart}/>
             </TouchableOpacity>
     }
+
+
     render() {
         // console.log("log"+JSON.stringify(this.props.rowData));
-        let description='<p>'+this.props.rowData.description+'</p>'
+        let description='<p>'+this.props.rowData.item.description+'</p>'
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={()=>
                 this.props.callBackItem(this.props.rowData)
             }>
             <View style={styles.item_container}>
-                    <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.fullName}</Text>
+                    <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.item.fullName}</Text>
                 {/*<Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.description}</Text>*/}
                 <HTMLView
                     value={description}
@@ -69,12 +74,6 @@ export default class TrendingItem extends Component {
                             <Text style={{color: 'gray', fontSize: 12}}>Build by:</Text>
                             {this.getImageViews()}
                         </View>
-
-                        {/*Text>{this.props.rowData.owner.login}</Text>*/}
-                        {/*<View style={{flexDirection: 'row', alignItems: 'center'}}>*/}
-                            {/*<Text style={{color: 'gray', fontSize: 12}}>Starts:</Text>*/}
-                            {/*<Text style={{color: 'gray', fontSize: 12}}>{this.props.rowData.stargazers_count}</Text>*/}
-                        {/*</View>*/}
                         {this.getStartView()}
                     </View>
                 </View>
@@ -83,16 +82,16 @@ export default class TrendingItem extends Component {
     }
     getImageViews(){
         var views=[];
-        for(var i=0,len=this.props.rowData.contributors.length;i<len;i++){
+        for(var i=0,len=this.props.rowData.item.contributors.length;i<len;i++){
             views.push( <Image key={i} style={{width: 18, height: 18, marginLeft: 3, borderRadius: 2}}
-                               source={{uri: this.props.rowData.contributors[i]}}
+                               source={{uri: this.props.rowData.item.contributors[i]}}
             />)
         }
         return views;
     }
     getMeta(){
-        if(this.props.rowData.meta!==null&&this.props.rowData.meta!==""){
-           return  (<Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.meta}</Text>);
+        if(this.props.rowData.item.meta!==null&&this.props.rowData.item.meta!==""){
+           return  (<Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.item.meta}</Text>);
         }
     }
 }

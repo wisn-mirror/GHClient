@@ -12,6 +12,7 @@ import PopularPage from './me/PopularPage';
 const URL = 'https://github.com/trending/';
 const GitHubURL = 'https://github.com';
 const SortByKey ='?since=daily';
+import Favorite from '../model/Favorite';
 export default class TrendingBar extends Component {
     constructor(props) {
         super(props);
@@ -37,6 +38,21 @@ export default class TrendingBar extends Component {
             this.onLoad(nextProps,true);
         }
     }
+    flushData(result){
+        var AllFavorite=[];
+        for( var i=0,len=result.length;i<len;i++){
+            AllFavorite.push(new Favorite(result[i],this.getIsFavorite(result[i])))
+        }
+        this.setState({
+            result: JSON.stringify(result),
+            dataSource: this.state.dataSource.cloneWithRows(AllFavorite),
+        })
+    }
+    getIsFavorite(item){
+        //TODO判断是否是收藏
+        return true;
+    }
+
     onLoad(timeSpan,isRefresh) {
         this.setState({
             isRefresh: true,
@@ -45,16 +61,15 @@ export default class TrendingBar extends Component {
         console.log("getUrl:"+url);
         this.DataRepository.fetchResponsitory(url,isRefresh)
             .then(result => {
+                this.flushData(result);
                 this.setState({
-                    result: JSON.stringify(result),
-                    dataSource: this.state.dataSource.cloneWithRows(result),
-                    isRefresh: false,
+                   isRefresh: false,
                 })
             })
             .catch(error => {
                 // console.log("error:"+JSON.stringify(error));
+                this.flushData(error);
                 this.setState({
-                    result: JSON.stringify(error),
                     isRefresh: false,
                 })
             })
@@ -75,6 +90,9 @@ export default class TrendingBar extends Component {
         });
     }
 
+    isFavorite(item, isFavorite) {
+        console.log(item + isFavorite);
+    }
     renderRowItem(rowData,sectionID,rowID,
                   RowHighlighted) {
         return (
@@ -82,6 +100,7 @@ export default class TrendingBar extends Component {
                     {...this.props}
                     rowData={rowData}
                     callBackItem={()=>this.callBackItemB(rowData)}
+                    isFavorite={(item, isFavorite) => this.isFavorite(item, isFavorite)}
                 />
         );
     }

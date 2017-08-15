@@ -14,16 +14,16 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
-import DataRepository ,{Flag_storage} from '../expand/dao/DataRepository';
+import DataRepository, {Flag_storage} from '../expand/dao/DataRepository';
 import PopularItem from '../component/PopularItem';
 import PopularPage from './me/PopularPage';
+import Favorite from '../model/Favorite';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const SortByKey = '&sort=starts';
 export default class PopularBar extends Component {
     constructor(props) {
         super(props);
-
         this.DataRepository = new DataRepository(Flag_storage.flag_popular);
         this.state = {
             result: '',
@@ -35,24 +35,35 @@ export default class PopularBar extends Component {
     componentDidMount() {
         this.onLoad(false);
     }
-
+    flushData(result){
+        var AllFavorite=[];
+        for( var i=0,len=result.items.length;i<len;i++){
+            AllFavorite.push(new Favorite(result.items[i],this.getIsFavorite(result.items[i]))) 
+        }
+        this.setState({
+            result: JSON.stringify(result),
+            dataSource: this.state.dataSource.cloneWithRows(AllFavorite),
+        })
+    }
+    getIsFavorite(item){
+        //TODO判断是否是收藏
+        return true;
+    }
     onLoad(isRefresh) {
         this.setState({
             isRefresh: true,
         });
         var url = this.getUrl();
-        this.DataRepository.fetchResponsitory(url,isRefresh)
+        this.DataRepository.fetchResponsitory(url, isRefresh)
             .then(result => {
+                this.flushData(result);
                 this.setState({
-                    result: JSON.stringify(result),
-                    dataSource: this.state.dataSource.cloneWithRows(result.items),
                     isRefresh: false,
                 })
-                // DeviceEventEmitter.emit("showToast", '网络加载成功！');
             })
             .catch(error => {
+               this.flushData(error);
                 this.setState({
-                    result: JSON.stringify(error),
                     isRefresh: false,
                 })
             })
@@ -65,22 +76,27 @@ export default class PopularBar extends Component {
     callBackItemB(rowData) {
         this.props.navigator.push({
             component: PopularPage,
-            props:{
+            props: {
                 ...this.props,
-                html_url:rowData.html_url,
-                title:rowData.full_name,
+                html_url: rowData.item.html_url,
+                title: rowData.item.full_name,
             }
         });
     }
 
-    renderRowItem(rowData,sectionID,rowID,
+    isFavorite(item, isFavorite) {
+        console.log(item + isFavorite);
+    }
+
+    renderRowItem(rowData, sectionID, rowID,
                   RowHighlighted) {
         return (
-                <PopularItem
-                    {...this.props}
-                    rowData={rowData}
-                    callBackItem={()=>this.callBackItemB(rowData)}
-                />
+            <PopularItem
+                {...this.props}
+                rowData={rowData}
+                callBackItem={() => this.callBackItemB(rowData)}
+                isFavorite={(item, isFavorite) => this.isFavorite(item, isFavorite)}
+            />
         );
     }
 
@@ -88,8 +104,8 @@ export default class PopularBar extends Component {
         return (
             <ListView
                 dataSource={this.state.dataSource}
-                renderRow={(rowData,sectionID,rowID,
-                    RowHighlighted)=>this.renderRowItem(rowData,sectionID,rowID,
+                renderRow={(rowData, sectionID, rowID,
+                            RowHighlighted) => this.renderRowItem(rowData, sectionID, rowID,
                     RowHighlighted)}
                 refreshControl={
                     <RefreshControl

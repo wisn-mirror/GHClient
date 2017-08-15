@@ -14,26 +14,29 @@ export default class PopularItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isChecked:false,
-            iconStart:require("../../res/images/ic_unstar_transparent.png"),
+            isChecked:this.props.rowData.isFavorite,
+            iconStart:this.props.rowData.isFavorite?require("../../res/images/ic_unstar_navbar.png")
+                :require("../../res/images/ic_unstar_transparent.png"),
         };
     }
 
     static proTypes = {
         callBackItem: PropTypes.func,
+        isFavorite:PropTypes.func,
     }
-    changeStartView(){
-        this.changeStatus(!this.state.isChecked)
+    changeStartView(item,isFavorite){
+        this.changeStatus(!isFavorite)
+        this.props.isFavorite(item,!isFavorite)
     }
     changeStatus(isCheck){
         this.setState({
             isChecked:isCheck,
-            iconStart:isCheck?require("../../res/images/ic_unstar_navbar.png")
+            iconStart:isCheck? require("../../res/images/ic_unstar_navbar.png")
                 :require("../../res/images/ic_unstar_transparent.png"),
         });
     }
     getStartView(){
-        return <TouchableOpacity onPress={()=>this.changeStartView()}>
+        return <TouchableOpacity onPress={()=>this.changeStartView(this.props.rowData,this.state.isChecked)}>
             <Image style={{width: 22, height: 22, padding:4,tintColor: "#5b7ee5"}}
                    source={this.state.iconStart}/>
         </TouchableOpacity>
@@ -42,11 +45,10 @@ export default class PopularItem extends Component {
         // console.log("func", this.callBackItem)
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={()=>
-                this.props.callBackItem(this.props.rowData)
-            }>
+                this.props.callBackItem(this.props.rowData)}>
             <View style={styles.item_container}>
-                    <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.full_name}</Text>
-                    <Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.description}</Text>
+                    <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.item.full_name}</Text>
+                    <Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.item.description}</Text>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -58,14 +60,14 @@ export default class PopularItem extends Component {
                             {/*<Text>{this.props.rowData.html_url}</Text>*/}
                             <Text style={{color: 'gray', fontSize: 12}}>Author:</Text>
                             <Image style={{width: 18, height: 18, marginLeft: 5, borderRadius: 1}}
-                                   source={{uri: this.props.rowData.owner.avatar_url}}
+                                   source={{uri: this.props.rowData.item.owner.avatar_url}}
                             />
                         </View>
 
                         {/*Text>{this.props.rowData.owner.login}</Text>*/}
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <Text style={{color: 'gray', fontSize: 12}}>Starts:</Text>
-                            <Text style={{color: 'gray', fontSize: 12}}>{this.props.rowData.stargazers_count}</Text>
+                            <Text style={{color: 'gray', fontSize: 12}}>{this.props.rowData.item.stargazers_count}</Text>
                         </View>
                         {this.getStartView()}
                     </View>
