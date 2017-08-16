@@ -10,36 +10,86 @@ import {
     WebView,
     Image,
     Alert,
+    TouchableOpacity,
 } from 'react-native';
 
 import NavigatorBar from "../../component/NavigatorBar";
-var github='https://www.github.com'
+import FavoriteDao from "../../expand/dao/FavoriteDao"
+var github = 'https://www.github.com'
 var WEBVIEW_REF = 'webview';
 export default class PopularPage extends Component {
     constructor(props) {
         super(props);
-        this.URl=github;
-        this.state = {
-            isLoadFinsh:false,
+        this.URl = github;
+        this.favoriteDao=new FavoriteDao(this.props.flag);
+        // rowData:rowData,
+            this.state = {
+            isLoadFinsh: false,
             backButtonEnabled: false,
             forwardButtonEnabled: false,
             url: this.props.html_url,
             title: this.props.title,
-            scalesPageToFit: true
+            scalesPageToFit: true,
+            isChecked: this.props.isFavorite,
+            iconStart: this.props.isFavorite ? require("../../../res/images/ic_unstar_navbar.png")
+                : require("../../../res/images/ic_unstar_transparent.png"),
         };
     }
-    leftButtonOnPress(){
-        if(this.state.backButtonEnabled){
+
+    leftButtonOnPress() {
+        if (this.state.backButtonEnabled) {
             this.refs[WEBVIEW_REF].goBack();
-        }else{
+        } else {
             this.props.navigator.pop();
         }
     }
-    RightButtonOnPress(){
+
+    RightButtonOnPress() {
 
     }
+
+    onPressShare() {
+        Alert.alert("share")
+    }
+    onFavorite(){
+        this.changeStatus(!this.state.isChecked);
+        var identify="keys";
+        if(this.props.flag==="keys"){
+            identify=this.props.rowData.item.id;
+        }else {
+            // identify="language";
+            identify=this.props.rowData.item.contributorsUrl;
+        }
+        if(!this.state.isChecked){
+            this.favoriteDao.saveFavorite(this.props.rowData.item,identify,null);
+        }else{
+            this.favoriteDao.removeFavorite(this.props.rowData.item,identify,null);
+        }
+    }
+
+    changeStatus(isCheck){
+        this.setState({
+            isChecked:isCheck,
+            iconStart:isCheck? require("../../../res/images/ic_unstar_navbar.png")
+                :require("../../../res/images/ic_unstar_transparent.png"),
+        });
+    }
+    getRightView() {
+        return <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+            <TouchableOpacity onPress={() => this.onPressShare()}>
+                <Image
+                       style={{width: 22, height: 22, padding: 5, tintColor: "white",marginRight:10}}
+                       source={require('../../../res/images/ic_share.png')}/>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.onFavorite()}>
+                <Image style={{width: 22, height: 22, padding: 5, tintColor: "white",marginRight:8}}
+                       source={this.state.iconStart}/>
+            </TouchableOpacity>
+        </View>
+    }
+
     render() {
-        console.log("title",this.state.title );
+        console.log("title", this.state.title);
         return (<View style={styles.container}>
             <NavigatorBar
                 title={this.state.title}
@@ -52,12 +102,12 @@ export default class PopularPage extends Component {
                            source={require('../../../res/images/ic_arrow_back_white_36pt.png')}/>
                 }
                 rightButton={
-                    <Text style={{color: 'white', marginRight: 5, fontSize: 16}}>Share</Text>
+                    this.getRightView()
                 }
                 leftButtonOnPress={() => this.leftButtonOnPress()}
                 rightButtonOnPress={() => this.RightButtonOnPress()}
             />
-           {/* <View style={{
+            {/* <View style={{
                 flexDirection: 'row',
                 height: 40,
                 alignItems: 'center',
@@ -93,10 +143,10 @@ export default class PopularPage extends Component {
             </View>*/}
             <WebView
                 mediaPlaybackRequiresUserAction={false}
-                onError={()=>this.onError()}
-                onLoad={()=>this.onLoad()}
-                onLoadEnd={()=>this.onLoadEnd()}
-                onLoadStart={()=>this.onLoadStart()}
+                onError={() => this.onError()}
+                onLoad={() => this.onLoad()}
+                onLoadEnd={() => this.onLoadEnd()}
+                onLoadStart={() => this.onLoadStart()}
                 ref={WEBVIEW_REF}
                 source={{uri: this.state.url}}
                 javaScriptEnabled={true}
@@ -109,43 +159,47 @@ export default class PopularPage extends Component {
             />
         </View>);
     }
+
     onNavigationStateChange = (navState) => {
         this.setState({
             backButtonEnabled: navState.canGoBack,
             forwardButtonEnabled: navState.canGoForward,
         })
-        this.titleName=navState.title;
+        this.titleName = navState.title;
 
     }
-    onShouldStartLoadWithRequest(){
 
-        return  true;
+    onShouldStartLoadWithRequest() {
+
+        return true;
     }
+
     onError() {
-        DeviceEventEmitter.emit("showToast",'onError');
+        DeviceEventEmitter.emit("showToast", 'onError');
 
     }
 
     onLoad() {
         //加载成功
-        DeviceEventEmitter.emit("showToast",'onLoad');
+        DeviceEventEmitter.emit("showToast", 'onLoad');
     }
 
     onLoadEnd() {
         // 加载结束时（无论成功或失败）调用。
-        DeviceEventEmitter.emit("showToast",'onLoadEnd');
+        DeviceEventEmitter.emit("showToast", 'onLoadEnd');
 
     }
 
     onLoadStart() {
-        DeviceEventEmitter.emit("showToast",'onLoadStart');
+        DeviceEventEmitter.emit("showToast", 'onLoadStart');
 
     }
-    go(){
-        if(this.text===null||this.text===''||this.text===undefined){
-            DeviceEventEmitter.emit("showToast",'please input url');
 
-        }else{
+    go() {
+        if (this.text === null || this.text === '' || this.text === undefined) {
+            DeviceEventEmitter.emit("showToast", 'please input url');
+
+        } else {
             this.setState({
                 url: this.text,
             });
@@ -155,21 +209,21 @@ export default class PopularPage extends Component {
     }
 
     goBack = () => {
-        if(this.state.backButtonEnabled){
+        if (this.state.backButtonEnabled) {
             this.refs[WEBVIEW_REF].goBack();
-        }else{
-            DeviceEventEmitter.emit("showToast",'can not back');
+        } else {
+            DeviceEventEmitter.emit("showToast", 'can not back');
         }
     };
 
     goForward = () => {
-        if(this.state.forwardButtonEnabled){
+        if (this.state.forwardButtonEnabled) {
             this.setState({
-                url:this.text,
+                url: this.text,
             });
             this.refs[WEBVIEW_REF].goForward();
-        }else{
-            DeviceEventEmitter.emit("showToast",'can not fwd');
+        } else {
+            DeviceEventEmitter.emit("showToast", 'can not fwd');
         }
 
     };

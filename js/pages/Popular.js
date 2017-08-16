@@ -54,7 +54,7 @@ export default class Popular extends Component {
 
         return (<View style={styles.container}>
             <NavigatorBar
-                title="最热"
+                title="Popular"
                 style={{backgroundColor: '#5b7ee5'}}
                 statusBarOutViewStyle={{backgroundColor: '#4862b4'}}
                 titleStyle={{color: 'white'}}

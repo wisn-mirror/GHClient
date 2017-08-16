@@ -108,13 +108,16 @@ export default class TrendingBar extends Component {
         return URL + this.props.tabLabel + "?"+timeSpan;
     }
 
-    callBackItemB(rowData) {
+    callBackItemB(rowData,isFavorite) {
         this.props.navigator.push({
             component: PopularPage,
             props:{
                 ...this.props,
-                html_url:GitHubURL+rowData.contributorsUrl,
-                title:rowData.fullName,
+                html_url:GitHubURL+rowData.item.contributorsUrl,
+                title:rowData.item.fullName,
+                isFavorite:isFavorite,
+                rowData:rowData,
+                flag:"language",
             }
         });
     }
@@ -133,7 +136,7 @@ export default class TrendingBar extends Component {
                 <TrendingItem
                     {...this.props}
                     rowData={rowData}
-                    callBackItem={()=>this.callBackItemB(rowData)}
+                    callBackItem={(item, isFavorite)=>this.callBackItemB(item, isFavorite)}
                     isFavorite={(item, isFavorite) => this.isFavorite(item, isFavorite)}
                 />
         );

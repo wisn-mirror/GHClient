@@ -48,7 +48,7 @@ export default class TrendingItem extends Component {
         let description='<p>'+this.props.rowData.item.description+'</p>'
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={()=>
-                this.props.callBackItem(this.props.rowData)
+                this.props.callBackItem(this.props.rowData,this.state.isChecked)
             }>
             <View style={styles.item_container}>
                     <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.item.fullName}</Text>

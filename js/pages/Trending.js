@@ -70,8 +70,8 @@ export default class Trending extends Component {
 
     getTitleCenterView() {
         return <View>
-            <TouchableHighlight  ref="button" onPress={()=>this.showPopover()}>
-                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+            <TouchableHighlight  ref="button"  onPress={()=>this.showPopover()}>
+                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor:"#5b7ee5"}}>
                     <Text style={{color: 'white', fontSize: 16}}>Trending</Text>
                     <Image style={{width: 13, height: 13, marginLeft: 4}}
                            source={require('../../res/images/ic_spinner_triangle.png')}/>

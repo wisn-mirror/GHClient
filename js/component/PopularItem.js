@@ -45,7 +45,7 @@ export default class PopularItem extends Component {
         // console.log("func", this.callBackItem)
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={()=>
-                this.props.callBackItem(this.props.rowData)}>
+                this.props.callBackItem(this.props.rowData,this.state.isChecked)}>
             <View style={styles.item_container}>
                     <Text style={{color: '#000', fontSize: 16}}>{this.props.rowData.item.full_name}</Text>
                     <Text style={{color: 'gray', fontSize: 13, marginTop: 5}}>{this.props.rowData.item.description}</Text>

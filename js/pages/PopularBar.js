@@ -99,13 +99,16 @@ export default class PopularBar extends Component {
         return URL + this.props.tabLabel + SortByKey;
     }
 
-    callBackItemB(rowData) {
+    callBackItemB(rowData,isFavorite) {
         this.props.navigator.push({
             component: PopularPage,
             props: {
                 ...this.props,
                 html_url: rowData.item.html_url,
                 title: rowData.item.full_name,
+                isFavorite:isFavorite,
+                rowData:rowData,
+                flag:"keys",
             }
         });
     }
@@ -125,7 +128,7 @@ export default class PopularBar extends Component {
             <PopularItem
                 {...this.props}
                 rowData={rowData}
-                callBackItem={() => this.callBackItemB(rowData)}
+                callBackItem={(item, isFavorite) => this.callBackItemB(item, isFavorite)}
                 isFavorite={(item, isFavorite) => this.isFavorite(item, isFavorite)}
             />
         );
