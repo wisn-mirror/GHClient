@@ -13,6 +13,8 @@ const URL = 'https://github.com/trending/';
 const GitHubURL = 'https://github.com';
 const SortByKey ='?since=daily';
 import Favorite from '../model/Favorite';
+import FavoriteDao from '../expand/dao/FavoriteDao';
+const  favoriteDao=new FavoriteDao("language");
 export default class TrendingBar extends Component {
     constructor(props) {
         super(props);
@@ -21,13 +23,17 @@ export default class TrendingBar extends Component {
             result: '',
             dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
             isRefresh: true,
+            keys:[],
         };
     }
 
     componentDidMount() {
         this.onLoad(this.props.timeSpan,false);
     }
-
+    updateState(data){
+        if(!this) return ;
+        this.setState(data);
+    }
     /**
      * 收到props属性的时候
      * @param nextProps
@@ -41,7 +47,8 @@ export default class TrendingBar extends Component {
     flushData(result){
         var AllFavorite=[];
         for( var i=0,len=result.length;i<len;i++){
-            AllFavorite.push(new Favorite(result[i],this.getIsFavorite(result[i])))
+            // console.log("flushData"+i+JSON.stringify(result[i]))
+            AllFavorite.push(new Favorite(result[i],this.getIsFavorite(JSON.stringify(result[i].contributorsUrl))))
         }
         this.setState({
             result: JSON.stringify(result),
@@ -49,8 +56,30 @@ export default class TrendingBar extends Component {
         })
     }
     getIsFavorite(item){
-        //TODO判断是否是收藏
-        return true;
+        for(var i=0,len=this.state.keys.length;i<len;i++){
+            // console.log("getIsFavorite"+this.state.keys[i]+ ""+item)
+            if(this.state.keys[i]==item){
+                return true;
+            }
+        }
+        return false;
+    }
+    getFavoriteKeys(data){
+        // console.log("trending getFavoriteKeys"+data)
+        favoriteDao.getFavoriteKeys()
+            .then(result=>{
+                if(result){
+                    // console.log("trending getFavoriteKeys"+result)
+                    this.updateState({
+                        keys:result,
+                    })
+                    this.flushData(data);
+                }
+            })
+            .catch(error=>{
+                this.flushData(data);
+            })
+
     }
 
     onLoad(timeSpan,isRefresh) {
@@ -61,14 +90,14 @@ export default class TrendingBar extends Component {
         console.log("getUrl:"+url);
         this.DataRepository.fetchResponsitory(url,isRefresh)
             .then(result => {
-                this.flushData(result);
+                this.getFavoriteKeys(result);
                 this.setState({
                    isRefresh: false,
                 })
             })
             .catch(error => {
                 // console.log("error:"+JSON.stringify(error));
-                this.flushData(error);
+                this.getFavoriteKeys(error);
                 this.setState({
                     isRefresh: false,
                 })
@@ -90,8 +119,13 @@ export default class TrendingBar extends Component {
         });
     }
 
-    isFavorite(item, isFavorite) {
-        console.log(item + isFavorite);
+    isFavorite(data, isFavorite) {
+        console.log(data.item + isFavorite);
+        if(isFavorite){
+            favoriteDao.saveFavorite(data.item,data.item.contributorsUrl,null);
+        }else{
+            favoriteDao.removeFavorite(data.item,data.item.contributorsUrl,null);
+        }
     }
     renderRowItem(rowData,sectionID,rowID,
                   RowHighlighted) {

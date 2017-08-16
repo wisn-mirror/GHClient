@@ -32,7 +32,7 @@ export default class HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTab: 'popular',
+            selectedTab: 'profile',
         };
     }
     componentDidMount(){

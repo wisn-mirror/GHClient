@@ -11,28 +11,37 @@ export default class FavoriteDao {
     }
 
     saveFavorite(value,key,callback){
-        AsyncStorage.setItem(key,value,(error)=>{
+        console.log("saveFavorite:"+value+" "+key);
+        AsyncStorage.setItem(JSON.stringify(key),JSON.stringify(value),(error)=>{
             if(!error){
                 //插入成功
-                updateFavoritekeys(key,true);
+                this.updateFavoritekeys(JSON.stringify(key),true);
             }
         })
     }
-    updateFavoriteKeys(key,isAdd){
+    updateFavoritekeys(key,isAdd){
         AsyncStorage.getItem(this.flag,(error,result)=>{
-            if(!error){
+            console.log("updateFavoritekeys"+ error+"   "+result);
                 var data=[];
                 if(result){
                     data=JSON.parse(result);
                     var index=data.indexOf(key);
+                    if(index===-1){
+                        if(isAdd){
+                            data.push(key);
+                        }
+                    }else{
+                       if(!isAdd){
+                           data.splice(index,1);
+                       }
+                    }
+                }else{
                     if(isAdd){
                         data.push(key);
-                    }else{
-                        data.splice(index,1);
                     }
-                    AsyncStorage.setItem(this.flag,JSON.stringify(data));
                 }
-            }
+            console.log(" fianl updateFavoritekeys"+ data);
+            AsyncStorage.setItem(this.flag,JSON.stringify(data));
         })
 
     }
@@ -41,7 +50,12 @@ export default class FavoriteDao {
             AsyncStorage.getItem(this.flag,(error,result)=>{
                 if(!error){
                     try{
-                        resolve(JSON.parse(result));
+                        console.log("kkkkk:"+result);
+                        if(result){
+                            resolve(JSON.parse(result));
+                        }else{
+                            reject(error);
+                        }
                     }catch (e){
                         reject(e);
                     }
@@ -51,10 +65,12 @@ export default class FavoriteDao {
             })
         })
     }
-    removeFavorite(key){
-        AsyncStorage.removeItem(key,(error)=>{
+    removeFavorite(value ,key,callback){
+        console.log("removeFavorite:"+value+" "+key);
+        AsyncStorage.removeItem(JSON.stringify(key),(error)=>{
             if(!error){
-                updateFavoritekeys(key,false);
+                //插入成功
+                this.updateFavoritekeys(JSON.stringify(key),false);
             }
         })
 

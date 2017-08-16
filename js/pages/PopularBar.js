@@ -21,7 +21,7 @@ import Favorite from '../model/Favorite';
 import FavoriteDao from '../expand/dao/FavoriteDao';
 const URL = 'https://api.github.com/search/repositories?q=';
 const SortByKey = '&sort=starts';
-const  favoriteDao=new FavoriteDao();
+const  favoriteDao=new FavoriteDao("keys");
 export default class PopularBar extends Component {
     constructor(props) {
         super(props);
@@ -44,7 +44,7 @@ export default class PopularBar extends Component {
     flushData(result){
         var AllFavorite=[];
         for( var i=0,len=result.items.length;i<len;i++){
-            AllFavorite.push(new Favorite(result.items[i],this.getIsFavorite(result.items[i]))) 
+            AllFavorite.push(new Favorite(result.items[i],this.getIsFavorite(JSON.stringify(result.items[i].id))))
         }
         this.setState({
             result: JSON.stringify(result),
@@ -53,25 +53,27 @@ export default class PopularBar extends Component {
     }
     getIsFavorite(item){
         for(var i=0,len=this.state.keys.length;i<len;i++){
-            if(this.state.keys.toString()===item){
+            if(this.state.keys[i]===item){
                 return true;
             }
         }
         return false;
     }
-    getFavoriteKeys(){
+    getFavoriteKeys(data){
         favoriteDao.getFavoriteKeys()
             .then(result=>{
-                if(!result){
+                if(result){
+                    console.log("getFavoriteKeys"+result)
                     this.updateState({
                         keys:result,
                     })
+                    this.flushData(data);
                 }
-                this.flushData(result);
             })
             .catch(error=>{
-                this.flushData(error);
+                this.flushData(data);
             })
+
     }
     onLoad(isRefresh) {
         this.setState({
@@ -80,13 +82,13 @@ export default class PopularBar extends Component {
         var url = this.getUrl();
         this.DataRepository.fetchResponsitory(url, isRefresh)
             .then(result => {
-                this.getFavoriteKeys();
+                this.getFavoriteKeys(result);
                 this.setState({
                     isRefresh: false,
                 })
             })
             .catch(error => {
-                this.getFavoriteKeys();
+                this.getFavoriteKeys(error);
                 this.setState({
                     isRefresh: false,
                 })
@@ -108,8 +110,13 @@ export default class PopularBar extends Component {
         });
     }
 
-    isFavorite(item, isFavorite) {
-        console.log(item + isFavorite);
+    isFavorite(data, isFavorite) {
+        console.log(data.item + isFavorite);
+        if(isFavorite){
+            favoriteDao.saveFavorite(data.item,data.item.id,null);
+        }else{
+            favoriteDao.removeFavorite(data.item,data.item.id,null);
+        }
     }
 
     renderRowItem(rowData, sectionID, rowID,
