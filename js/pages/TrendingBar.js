@@ -20,7 +20,6 @@ export default class TrendingBar extends Component {
         super(props);
         this.DataRepository = new DataRepository(Flag_storage.flag_trending);
         this.state = {
-            result: '',
             dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
             isRefresh: true,
             keys:[],
@@ -51,7 +50,6 @@ export default class TrendingBar extends Component {
             AllFavorite.push(new Favorite(result[i],this.getIsFavorite(JSON.stringify(result[i].contributorsUrl))))
         }
         this.setState({
-            result: JSON.stringify(result),
             dataSource: this.state.dataSource.cloneWithRows(AllFavorite),
         })
     }

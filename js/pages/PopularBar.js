@@ -27,7 +27,6 @@ export default class PopularBar extends Component {
         super(props);
         this.DataRepository = new DataRepository(Flag_storage.flag_popular);
         this.state = {
-            result: '',
             dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
             isRefresh: true,
             keys:[],
@@ -35,8 +34,41 @@ export default class PopularBar extends Component {
     }
 
     componentDidMount() {
+        console.log("lifecycle----componentDidMount")
         this.onLoad(false);
     }
+    /*
+      componentWillMount(){
+        console.log("lifecycle----componentWillMount")
+    }
+     componentWillUnmount(){
+         console.log("lifecycle----componentWillUnmount")
+     }
+
+     componentWillReceiveProps(nextProps) {
+         console.log("lifecycle----componentWillReceiveProps")
+        // this.onLoad(false);
+     }
+
+     shouldComponentUpdate(nextProps, nextState) {
+         console.log("lifecycle----shouldComponentUpdate")
+         return true;
+     }
+    componentWillUpdate(){
+        console.log("lifecycle----componentWillUpdate")
+
+    }
+    componentDidUpdate(){
+        console.log("lifecycle----componentDidUpdate")
+
+    }
+
+    componentWillUnmount() {
+        console.log("lifecycle----componentWillUnmount")
+
+    }
+    */
+
     updateState(data){
         if(!this) return ;
         this.setState(data);
@@ -47,13 +79,13 @@ export default class PopularBar extends Component {
             AllFavorite.push(new Favorite(result.items[i],this.getIsFavorite(JSON.stringify(result.items[i].id))))
         }
         this.setState({
-            result: JSON.stringify(result),
             dataSource: this.state.dataSource.cloneWithRows(AllFavorite),
         })
     }
     getIsFavorite(item){
+        console.log(this.state.keys+ "  "+item)
         for(var i=0,len=this.state.keys.length;i<len;i++){
-            if(this.state.keys[i]===item){
+            if(this.state.keys[i]==item){
                 return true;
             }
         }

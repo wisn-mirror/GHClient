@@ -20,8 +20,9 @@ export default class FavoriteDao {
         })
     }
     updateFavoritekeys(key,isAdd){
+        console.log("flag:  "+this.flag);
         AsyncStorage.getItem(this.flag,(error,result)=>{
-            console.log("updateFavoritekeys"+ error+"   "+result);
+            console.log("updateFavoritekeys  "+result);
                 var data=[];
                 if(result){
                     data=JSON.parse(result);
@@ -50,7 +51,7 @@ export default class FavoriteDao {
             AsyncStorage.getItem(this.flag,(error,result)=>{
                 if(!error){
                     try{
-                        console.log("kkkkk:"+result);
+                        console.log("getFavoriteKeys :"+result);
                         if(result){
                             resolve(JSON.parse(result));
                         }else{
@@ -69,7 +70,8 @@ export default class FavoriteDao {
         console.log("removeFavorite:"+value+" "+key);
         AsyncStorage.removeItem(JSON.stringify(key),(error)=>{
             if(!error){
-                //插入成功
+                //移除成功
+                console.log("removeFavorite success:"+value+" "+key);
                 this.updateFavoritekeys(JSON.stringify(key),false);
             }
         })

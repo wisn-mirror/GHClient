@@ -4,8 +4,6 @@ import React, {
 import {
     View,
     StyleSheet,
-    Text,
-    TextInput,
     DeviceEventEmitter,
     WebView,
     Image,
@@ -57,7 +55,6 @@ export default class PopularPage extends Component {
         if(this.props.flag==="keys"){
             identify=this.props.rowData.item.id;
         }else {
-            // identify="language";
             identify=this.props.rowData.item.contributorsUrl;
         }
         if(!this.state.isChecked){
@@ -89,7 +86,6 @@ export default class PopularPage extends Component {
     }
 
     render() {
-        console.log("title", this.state.title);
         return (<View style={styles.container}>
             <NavigatorBar
                 title={this.state.title}
@@ -105,7 +101,7 @@ export default class PopularPage extends Component {
                     this.getRightView()
                 }
                 leftButtonOnPress={() => this.leftButtonOnPress()}
-                rightButtonOnPress={() => this.RightButtonOnPress()}
+               /* rightButtonOnPress={() => this.RightButtonOnPress()}*/
             />
             {/* <View style={{
                 flexDirection: 'row',
@@ -168,11 +164,10 @@ export default class PopularPage extends Component {
         this.titleName = navState.title;
 
     }
-
-    onShouldStartLoadWithRequest() {
+    /*onShouldStartLoadWithRequest() {
 
         return true;
-    }
+    }*/
 
     onError() {
         DeviceEventEmitter.emit("showToast", 'onError');
@@ -241,4 +236,3 @@ const styles = StyleSheet.create({
         height: 50,
     }
 });
-module.exports = PopularPage;

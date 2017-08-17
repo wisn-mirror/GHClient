@@ -37,7 +37,7 @@ export default class TrendingItem extends Component {
     }
     getStartView(){
         return <TouchableOpacity onPress={()=>this.changeStartView(this.props.rowData,this.state.isChecked)}>
-            <Image style={{width: 22, height: 22, padding:4,tintColor: "#5b7ee5"}}
+            <Image style={{width: 25, height: 25, padding:7,tintColor: "#5b7ee5"}}
                    source={this.state.iconStart}/>
             </TouchableOpacity>
     }

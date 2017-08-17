@@ -35,14 +35,19 @@ export default class PopularItem extends Component {
                 :require("../../res/images/ic_unstar_transparent.png"),
         });
     }
+    // componentWillReceiveProps(nextProps) {
+    //     console.log(this.props.rowData+ ""+nextProps.rowData);
+    //     if(this.props.rowData!==nextProps.rowData){
+    //         this.onLoad(nextProps,true);
+    //     }
+    // }
     getStartView(){
         return <TouchableOpacity onPress={()=>this.changeStartView(this.props.rowData,this.state.isChecked)}>
-            <Image style={{width: 22, height: 22, padding:4,tintColor: "#5b7ee5"}}
+            <Image style={{width: 25, height: 25, padding:7,tintColor: "#5b7ee5"}}
                    source={this.state.iconStart}/>
         </TouchableOpacity>
     }
     render() {
-        // console.log("func", this.callBackItem)
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={()=>
                 this.props.callBackItem(this.props.rowData,this.state.isChecked)}>
@@ -93,9 +98,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 1,
         elevation: 2,
-
-
     }
 })
-
-module.exports = PopularItem;
