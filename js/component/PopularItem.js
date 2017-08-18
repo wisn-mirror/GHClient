@@ -35,12 +35,11 @@ export default class PopularItem extends Component {
                 :require("../../res/images/ic_unstar_transparent.png"),
         });
     }
-    // componentWillReceiveProps(nextProps) {
-    //     console.log(this.props.rowData+ ""+nextProps.rowData);
-    //     if(this.props.rowData!==nextProps.rowData){
-    //         this.onLoad(nextProps,true);
-    //     }
-    // }
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            isChecked:nextProps.rowData.isFavorite,
+        })
+    }
     getStartView(){
         return <TouchableOpacity onPress={()=>this.changeStartView(this.props.rowData,this.state.isChecked)}>
             <Image style={{width: 25, height: 25, padding:7,tintColor: "#5b7ee5"}}
