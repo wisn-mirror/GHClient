@@ -73,8 +73,34 @@ export default class FavoriteDao {
                 //移除成功
                 console.log("removeFavorite success:"+value+" "+key);
                 this.updateFavoritekeys(JSON.stringify(key),false);
-            }
+            } 
         })
 
     }
+    getAllItems(){
+        return new Promise((resolve,reject)=>{
+            this.getFavoriteKeys().then(keys=>{
+                var items=[];
+                if(keys){
+                    AsyncStorage.multiGet(keys,(error,stores)=>{
+                        try{
+                            stores.map((result,i,store)=>{
+                                let value=store[i][1];
+                                console.log("getAllItems:"+store+value);
+                                if(value){
+                                    items.push(JSON.parse(value));
+                                }
+                            })
+                            resolve(items);
+                        }catch (e){
+                            reject(e);
+                        }
+                    }) 
+                }else{
+                    reject(items);
+                }
+            })
+        })
+    }
+
 }

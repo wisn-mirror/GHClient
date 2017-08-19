@@ -7,33 +7,15 @@ import {
 } from 'react-native';
 
 import NavigatorBar from "../component/NavigatorBar";
-import DataRepository from '../expand/dao/DataRepository';
-import PopularBar from './PopularBar';
+import FavoriteBar from './FavoriteBar';
 import ScrollViewTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
-import LanguageDao, {FLAG_LAGUAGE} from '../expand/dao/LanguageDao';
 
 export default class Favorite extends Component {
     constructor(props) {
         super(props);
-        this.DataRepository = new DataRepository();
-        this.LanguageDao = new LanguageDao();
-        this.state = {
-            data: [],
-        };
     }
 
     onLoad() {
-        this.LanguageDao.fetch(FLAG_LAGUAGE.flag_key)
-            .then(result => {
-                this.setState({
-                    data: result,
-                })
-            }).catch(error => {
-            this.setState({
-                state: error,
-            })
-        })
-
     }
 
     componentDidMount() {
@@ -42,7 +24,7 @@ export default class Favorite extends Component {
 
     render() {
 
-        let content = this.state.data.length > 0 ? <ScrollViewTabView
+        let content =<ScrollViewTabView
             tabBarBackgroundColor='#5b7ee5'
             tabBarActiveTextColor="white"
             tabBarInactiveTextColor="white"
@@ -50,7 +32,7 @@ export default class Favorite extends Component {
             renderTabBar={() => <ScrollableTabBar/>}
         >
             {this.getContentView()}
-        </ScrollViewTabView> : null;
+        </ScrollViewTabView>;
 
         return (<View style={styles.container}>
             <NavigatorBar
@@ -66,14 +48,14 @@ export default class Favorite extends Component {
 
     getContentView() {
         var views = [];
-        for (var i = 0, len = this.state.data.length; i < len; i++) {
-            var oneTemp = this.state.data[i];
-            if (oneTemp.checked) {
-                views.push(<PopularBar
-                    tabLabel={oneTemp.name}
-                    key={i}  {...this.props}/>);
-            }
-        }
+        views.push(<FavoriteBar
+            tabLabel={"Popular"}
+            tag={"keys"}
+            key={0}  {...this.props}/>);
+        views.push(<FavoriteBar
+            tabLabel={"Trending"}
+            tag={"language"}
+            key={1}  {...this.props}/>);
         return views;
     }
 }

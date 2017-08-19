@@ -50,7 +50,7 @@ export default class HomePage extends Component {
             <View style={{flex:1,backgroundColor:'white'}}>
             <TabNavigator>
                 {this.getTabNavigator('popular', 'Popular', require('../../res/images/ic_polular.png'), Popular)}
-                {this.getTabNavigator('profile', 'Profile', require('../../res/images/ic_trending.png'), Trending)}
+                {this.getTabNavigator('trending', 'Trending', require('../../res/images/ic_trending.png'), Trending)}
                 {this.getTabNavigator('favorite', 'Favorite', require('../../res/images/ic_favorite.png'), Favorite)}
                 {this.getTabNavigator('me', 'Me', require('../../res/images/ic_my.png'), Me)}
             </TabNavigator>
