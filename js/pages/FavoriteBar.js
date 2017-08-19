@@ -13,7 +13,7 @@ import {
     RefreshControl,
     TouchableOpacity,
 } from 'react-native';
-
+import TrendingItem from '../component/TrendingItem';
 import PopularItem from '../component/PopularItem';
 import PopularPage from './me/PopularPage';
 import Favorite from '../model/Favorite';
@@ -38,9 +38,16 @@ export default class FavoriteBar extends Component {
     }
     flushData(result){
         var AllFavorite=[];
-        for( var i=0,len=result.length;i<len;i++){
-            AllFavorite.push(new Favorite(result[i],this.getIsFavorite(JSON.stringify(result[i].id))))
+        if(this.props.tag==="keys"){
+            for( var i=0,len=result.length;i<len;i++){
+                AllFavorite.push(new Favorite(result[i],this.getIsFavorite(JSON.stringify(result[i].id))))
+            }
+        }else{
+            for( var i=0,len=result.length;i<len;i++){
+                AllFavorite.push(new Favorite(result[i],this.getIsFavorite(JSON.stringify(result[i].contributorsUrl))))
+            }
         }
+
         this.setState({
             dataSource: this.state.dataSource.cloneWithRows(AllFavorite),
         })
@@ -90,38 +97,76 @@ export default class FavoriteBar extends Component {
     }
 
     callBackItemB(rowData,isFavorite) {
-        this.props.navigator.push({
-            component: PopularPage,
-            props: {
-                ...this.props,
-                html_url: rowData.item.html_url,
-                title: rowData.item.full_name,
-                isFavorite:isFavorite,
-                rowData:rowData,
-                flag:"keys",
-            }
-        });
+        if(this.props.tag==="keys"){
+            this.props.navigator.push({
+                component: PopularPage,
+                props: {
+                    ...this.props,
+                    html_url: rowData.item.html_url,
+                    title: rowData.item.full_name,
+                    isFavorite:isFavorite,
+                    rowData:rowData,
+                    flag:"keys",
+                }
+            });
+        }else{
+            this.props.navigator.push({
+                component: PopularPage,
+                props:{
+                    ...this.props,
+                    html_url:GitHubURL+rowData.item.contributorsUrl,
+                    title:rowData.item.fullName,
+                    isFavorite:isFavorite,
+                    rowData:rowData,
+                    flag:"language",
+                }
+            });
+        }
+
     }
 
     isFavorite(data, isFavorite) {
         console.log(data.item + isFavorite);
-        if(isFavorite){
-            this.favoriteDao.saveFavorite(data.item,data.item.id,null);
+        if(this.props.tag==="keys") {
+            if (isFavorite) {
+                this.favoriteDao.saveFavorite(data.item, data.item.id, null);
+            } else {
+                this.favoriteDao.removeFavorite(data.item, data.item.id, null);
+            }
+            DeviceEventEmitter.emit("updateData_popular");
         }else{
-            this.favoriteDao.removeFavorite(data.item,data.item.id,null);
+            if(isFavorite){
+                this.favoriteDao.saveFavorite(data.item,data.item.contributorsUrl,null);
+            }else{
+                this.favoriteDao.removeFavorite(data.item,data.item.contributorsUrl,null);
+            }
+            DeviceEventEmitter.emit("updateData_trending");
         }
+        //通知刷新
     }
 
     renderRowItem(rowData, sectionID, rowID,
                   RowHighlighted) {
-        return (
-            <PopularItem
-                {...this.props}
-                rowData={rowData}
-                callBackItem={(item, isFavorite) => this.callBackItemB(item, isFavorite)}
-                isFavorite={(item, isFavorite) => this.isFavorite(item, isFavorite)}
-            />
-        );
+        if(this.props.tag==="keys"){
+            return (
+                <PopularItem
+                    {...this.props}
+                    rowData={rowData}
+                    callBackItem={(item, isFavorite) => this.callBackItemB(item, isFavorite)}
+                    isFavorite={(item, isFavorite) => this.isFavorite(item, isFavorite)}
+                />
+            );
+        }else{
+            return (
+                <TrendingItem
+                    {...this.props}
+                    rowData={rowData}
+                    callBackItem={(item, isFavorite)=>this.callBackItemB(item, isFavorite)}
+                    isFavorite={(item, isFavorite) => this.isFavorite(item, isFavorite)}
+                />
+            );
+        }
+
     }
 
     render() {

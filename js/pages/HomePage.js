@@ -101,5 +101,3 @@ const styles = StyleSheet.create({
         height: 20,
     }
 })
-
-module.exports = HomePage

@@ -34,8 +34,14 @@ export default class PopularBar extends Component {
     }
 
     componentDidMount() {
-        console.log("lifecycle----componentDidMount")
+        // console.log("lifecycle----componentDidMount")
         this.onLoad(false);
+        this.listener=DeviceEventEmitter.addListener("updateData_popular",(e)=>{
+            console.log("updateData_trending");
+            DeviceEventEmitter.emit("showToast","刷新通知");
+        })
+
+
     }
     /*
       componentWillMount(){
@@ -68,7 +74,10 @@ export default class PopularBar extends Component {
 
     }
     */
-
+    componentWillUnmount() {
+        // console.log("lifecycle----componentWillUnmount")
+        this.listener.remove();
+    }
     updateState(data){
         if(!this) return ;
         this.setState(data);
@@ -92,7 +101,7 @@ export default class PopularBar extends Component {
         return false;
     }
     getFavoriteKeys(data){
-        favoriteDao.getFavoriteKeys()
+        this.favoriteDao.getFavoriteKeys()
             .then(result=>{
                 if(result){
                     console.log("getFavoriteKeys"+result)
@@ -148,9 +157,9 @@ export default class PopularBar extends Component {
     isFavorite(data, isFavorite) {
         console.log(data.item + isFavorite);
         if(isFavorite){
-            favoriteDao.saveFavorite(data.item,data.item.id,null);
+            this.favoriteDao.saveFavorite(data.item,data.item.id,null);
         }else{
-            favoriteDao.removeFavorite(data.item,data.item.id,null);
+            this. favoriteDao.removeFavorite(data.item,data.item.id,null);
         }
     }
 

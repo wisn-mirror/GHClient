@@ -4,6 +4,7 @@ import React, {
 import {
     ListView,
     RefreshControl,
+    DeviceEventEmitter,
 } from 'react-native';
 
 import DataRepository ,{Flag_storage} from '../expand/dao/DataRepository';
@@ -28,6 +29,14 @@ export default class TrendingBar extends Component {
 
     componentDidMount() {
         this.onLoad(this.props.timeSpan,false);
+        this.listener=DeviceEventEmitter.addListener("updateData_trending",(e)=>{
+            console.log("updateData_trending")
+            DeviceEventEmitter.emit("showToast","刷新通知");
+        })
+    }
+
+    componentWillUnmount() {
+        this.listener.remove();
     }
     updateState(data){
         if(!this) return ;
@@ -64,7 +73,7 @@ export default class TrendingBar extends Component {
     }
     getFavoriteKeys(data){
         // console.log("trending getFavoriteKeys"+data)
-        favoriteDao.getFavoriteKeys()
+        this.favoriteDao.getFavoriteKeys()
             .then(result=>{
                 if(result){
                     // console.log("trending getFavoriteKeys"+result)
@@ -123,9 +132,9 @@ export default class TrendingBar extends Component {
     isFavorite(data, isFavorite) {
         console.log(data.item + isFavorite);
         if(isFavorite){
-            favoriteDao.saveFavorite(data.item,data.item.contributorsUrl,null);
+            this.favoriteDao.saveFavorite(data.item,data.item.contributorsUrl,null);
         }else{
-            favoriteDao.removeFavorite(data.item,data.item.contributorsUrl,null);
+            this.favoriteDao.removeFavorite(data.item,data.item.contributorsUrl,null);
         }
     }
     renderRowItem(rowData,sectionID,rowID,
