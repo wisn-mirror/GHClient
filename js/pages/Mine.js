@@ -18,6 +18,7 @@ import LanguageDao, {FLAG_LAGUAGE} from '../expand/dao/LanguageDao';
 import GlobalStyles from "../../res/style/GlobalStyles"
 import  {MORE_MENU}from "../component/MoreMunu"
 import ViewUtils from "../utils/ViewUtils"
+import AboutMe from "./me/AboutMe"
 export default class Mine extends Component {
     constructor(props) {
         super(props);
@@ -29,6 +30,9 @@ export default class Mine extends Component {
             menuType:keys,
         }
         switch (keys){
+            case MORE_MENU.GitHub_Popular:
+                targetComponent=AboutMe;
+                break;
             case MORE_MENU.Custom_Language:
                 targetComponent=CustomKeyPage;
                 param.language_flag=FLAG_LAGUAGE.flag_language;
