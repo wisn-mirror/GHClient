@@ -3,22 +3,16 @@
  */
 import React, {Component} from 'react';
 import {
-    Dimensions,
-    Image,
-    ListView,
-    PixelRatio,
-    StyleSheet,
-    Text,
     View,
-    Platform,
-    TouchableOpacity,
-    Linking,
+    Clipboard,
+    Alert,
 } from 'react-native';
 
 import ViewUtils from "../../utils/ViewUtils"
 import WebViewPage from "./WebViewPage"
 import  {MORE_MENU} from "../../component/MoreMunu"
 import AboutComment ,{Flag_About}from './AboutComment'
+
 const Flag={
     REPOSITORY:'open source Project',
     Blog:{
@@ -102,13 +96,23 @@ export default class AboutMe extends Component {
         let views=[];
         for(let i in data){
             var title=isShowBlog?data[i].title:data[i].title+data[i].account;
-            views.push(ViewUtils.getSettingItem((keys)=>this._onPress(keys),
+            views.push(ViewUtils.getSettingItem(()=>this._onPress(data[i]),
                     null,
                 title,{tintColor:"#5b7ee5"},null,i))
         }
         return views;
     }
     _onPress(keys){
+        switch(keys.title){
+            case "qq":
+                Clipboard.setString(keys.account);
+                Alert.alert("qq已经复制到剪切板了");
+                break;
+            case "email":
+                Clipboard.setString(keys.account);
+                Alert.alert("email已经复制到剪切板了");
+                break;
 
+        }
     }
 }
