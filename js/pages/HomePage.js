@@ -49,7 +49,8 @@ export default class HomePage extends Component {
     render() {
         return (
             <View style={{flex:1,backgroundColor:'white'}}>
-            <TabNavigator>
+            <TabNavigator tabBarStyle={{ height: 50, overflow: 'scroll' }}
+                          sceneStyle={{ paddingBottom: 0}} >
                 {this.getTabNavigator('popular', 'Popular', require('../../res/images/ic_polular.png'), Popular)}
                 {this.getTabNavigator('trending', 'Trending', require('../../res/images/ic_trending.png'), Trending)}
                 {this.getTabNavigator('favorite', 'Favorite', require('../../res/images/ic_favorite.png'), Favorite)}
@@ -82,22 +83,7 @@ export default class HomePage extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
+
     image: {
         width: 20,
         height: 20,

@@ -18,6 +18,7 @@ import LanguageDao, {FLAG_LAGUAGE} from '../expand/dao/LanguageDao';
 import GlobalStyles from "../../res/style/GlobalStyles"
 import  {MORE_MENU}from "../component/MoreMunu"
 import ViewUtils from "../utils/ViewUtils"
+import AboutClient from "./me/AboutClient"
 import AboutMe from "./me/AboutMe"
 export default class Mine extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ export default class Mine extends Component {
         }
         switch (keys){
             case MORE_MENU.GitHub_Popular:
-                targetComponent=AboutMe;
+                targetComponent=AboutClient;
                 break;
             case MORE_MENU.Custom_Language:
                 targetComponent=CustomKeyPage;
@@ -68,6 +69,7 @@ export default class Mine extends Component {
             case MORE_MENU.Custom_Theme:
                 break;
             case MORE_MENU.About_Author:
+                targetComponent=AboutMe;
                 break;
             case MORE_MENU.About:
                 break;
@@ -89,7 +91,7 @@ export default class Mine extends Component {
                 style={{backgroundColor: '#5b7ee5'}}
                 statusBarOutViewStyle={{backgroundColor: '#4862b4'}}
             />
-            <ScrollView>
+            <ScrollView >
                 <TouchableOpacity onPress={()=>this._onPress(MORE_MENU.GitHub_Popular)}>
                 <View style={{flexDirection:"row",height:80,justifyContent:"space-between",alignItems:"center"}}>
                     <View style={{flexDirection:"row",alignItems:'center'}}>
@@ -133,6 +135,7 @@ export default class Mine extends Component {
                 {ViewUtils.getSettingItem((keys)=>this._onPress(keys),
                     require('../../res/images/ic_insert_emoticon.png'),
                     MORE_MENU.About_Author,{tintColor:"#5b7ee5"},null)}
+                    <View  style={{height:120}}/>
             </ScrollView>
         </View>)
     }
