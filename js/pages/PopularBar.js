@@ -101,7 +101,8 @@ export default class PopularBar extends Component {
         return false;
     }
     getFavoriteKeys(data){
-        this.favoriteDao.getFavoriteKeys()
+        // console.log("dddd"+data)
+        favoriteDao.getFavoriteKeys()
             .then(result=>{
                 if(result){
                     console.log("getFavoriteKeys"+result)
@@ -157,9 +158,9 @@ export default class PopularBar extends Component {
     isFavorite(data, isFavorite) {
         console.log(data.item + isFavorite);
         if(isFavorite){
-            this.favoriteDao.saveFavorite(data.item,data.item.id,null);
+            favoriteDao.saveFavorite(data.item,data.item.id,null);
         }else{
-            this. favoriteDao.removeFavorite(data.item,data.item.id,null);
+            favoriteDao.removeFavorite(data.item,data.item.id,null);
         }
     }
 

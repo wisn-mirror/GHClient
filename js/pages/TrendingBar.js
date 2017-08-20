@@ -73,7 +73,7 @@ export default class TrendingBar extends Component {
     }
     getFavoriteKeys(data){
         // console.log("trending getFavoriteKeys"+data)
-        this.favoriteDao.getFavoriteKeys()
+       favoriteDao.getFavoriteKeys()
             .then(result=>{
                 if(result){
                     // console.log("trending getFavoriteKeys"+result)
@@ -132,9 +132,9 @@ export default class TrendingBar extends Component {
     isFavorite(data, isFavorite) {
         console.log(data.item + isFavorite);
         if(isFavorite){
-            this.favoriteDao.saveFavorite(data.item,data.item.contributorsUrl,null);
+            favoriteDao.saveFavorite(data.item,data.item.contributorsUrl,null);
         }else{
-            this.favoriteDao.removeFavorite(data.item,data.item.contributorsUrl,null);
+            favoriteDao.removeFavorite(data.item,data.item.contributorsUrl,null);
         }
     }
     renderRowItem(rowData,sectionID,rowID,
