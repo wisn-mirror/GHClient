@@ -91,7 +91,7 @@ export default class Mine extends Component {
             />
             <ScrollView>
                 <TouchableOpacity onPress={()=>this._onPress(MORE_MENU.GitHub_Popular)}>
-                <View style={{flexDirection:"row",height:100,justifyContent:"space-between",alignItems:"center"}}>
+                <View style={{flexDirection:"row",height:80,justifyContent:"space-between",alignItems:"center"}}>
                     <View style={{flexDirection:"row",alignItems:'center'}}>
                     <Image style={{width: 28, height: 28, margin: 5,tintColor:"#5b7ee5"}}
                                   source={require('../../res/images/ic_trending.png')} />

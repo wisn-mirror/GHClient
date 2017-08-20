@@ -69,7 +69,7 @@ export default class HomePage extends Component {
                 selectedTitleStyle={{color: '#5b7ee5'}}
                 renderIcon={() => <Image style={styles.image} source={iconRes}/>}
                 renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#5b7ee5'}]} source={iconRes}/>}
-                renderBadge={() => this.getView()}
+                /*renderBadge={() => this.getView()}*/
                 onPress={() => this.setState({selectedTab: selectedTab1})}
             >
                 <Component {...this.props}/>
