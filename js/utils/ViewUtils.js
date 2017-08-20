@@ -16,7 +16,7 @@ export default class ViewUtils{
         return  (<TouchableOpacity onPress={()=>callBack(text)}>
             <View style={{flexDirection:"row",height:48,justifyContent:"space-between",alignItems:"center"}}>
                 <View style={{flexDirection:"row",alignItems:'center'}}>
-                    <Image style={[{width: 20, height: 20, margin: 5,tintColor:"#5b7ee5"},tinStyle]}
+                    <Image style={[{width: 20, height: 20, marginLeft:10, margin: 5,tintColor:"#5b7ee5"},tinStyle]}
                            source={icon} />
                     <Text style={{fontSize:14, marginLeft:5, color:"black"}}>{text}</Text>
                 </View>

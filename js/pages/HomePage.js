@@ -53,6 +53,7 @@ export default class HomePage extends Component {
                 {this.getTabNavigator('popular', 'Popular', require('../../res/images/ic_polular.png'), Popular)}
                 {this.getTabNavigator('trending', 'Trending', require('../../res/images/ic_trending.png'), Trending)}
                 {this.getTabNavigator('favorite', 'Favorite', require('../../res/images/ic_favorite.png'), Favorite)}
+                {/*{this.getTabNavigator('mine', 'Mine', require('../../res/images/ic_my.png'), Me)}*/}
                 {this.getTabNavigator('mine', 'Mine', require('../../res/images/ic_my.png'), Mine)}
             </TabNavigator>
                 <Toast ref={toast => this.toast = toast}/>
